@@ -1023,6 +1023,9 @@ function calculateAndShow() {
   document.getElementById('resultsSection').style.display = 'block';
   setTimeout(() => document.getElementById('resultsSection').scrollIntoView({ behavior:'smooth', block:'start' }), 60);
 
+  // Pre-load Maps API so gym search is ready immediately
+  _bootstrapMaps(0, 0);
+
   if (email) sendEmail(email, { tdee, proteinG, fatG, carbG, goal, gender, age,
     heightDisplay: fmtHeight(form), weightDisplay: fmtWeight(form) });
 }
@@ -1108,8 +1111,16 @@ function requestLocation() {
   if (!navigator.geolocation) { showToast('Geolocation not supported'); return; }
   showToast('📡 Finding your location…');
   navigator.geolocation.getCurrentPosition(
-    pos => loadNearbyGyms(pos.coords.latitude, pos.coords.longitude),
-    ()  => showToast('⚠️ Location access denied')
+    pos => {
+      if (window._gymMapsLoaded) {
+        doSearchAt(pos.coords.latitude, pos.coords.longitude, 'My Location');
+      } else {
+        window._pendingLat = pos.coords.latitude;
+        window._pendingLng = pos.coords.longitude;
+        // Maps should already be loading via calculateAndShow — just wait
+      }
+    },
+    () => showToast('⚠️ Location access denied')
   );
 }
 
@@ -1118,7 +1129,7 @@ function searchLocation() {
   if (!input) { showToast('⚠️ Enter a location to search'); return; }
   if (!window._gymMapsLoaded) {
     window._pendingSearch = input;
-    _bootstrapMaps(0, 0);
+    showToast('⏳ Loading map…');
     return;
   }
   _geocodeAndSearch(input);
@@ -1132,7 +1143,7 @@ function _geocodeAndSearch(address) {
       const loc = results[0].geometry.location;
       doSearchAt(loc.lat(), loc.lng(), results[0].formatted_address);
     } else {
-      showToast('⚠️ Location not found');
+      showToast('⚠️ Location not found. Try a more specific address.');
     }
   });
 }
@@ -1147,13 +1158,16 @@ function loadNearbyGyms(lat, lng) {
   }
   if (window._gymMapsLoaded) {
     doSearchAt(lat, lng, 'My Location');
-    return;
+  } else {
+    window._pendingLat = lat;
+    window._pendingLng = lng;
+    _bootstrapMaps();
   }
-  _bootstrapMaps(lat, lng);
 }
 
-function _bootstrapMaps(lat, lng) {
-  window._initLat = lat; window._initLng = lng;
+function _bootstrapMaps() {
+  if (window._gymMapsLoading || window._gymMapsLoaded) return;
+  window._gymMapsLoading = true;
   const s = document.createElement('script');
   s.src = `https://maps.googleapis.com/maps/api/js?key=${CONFIG.google_maps_key}&libraries=places&callback=initMap`;
   s.async = true;
@@ -1161,16 +1175,15 @@ function _bootstrapMaps(lat, lng) {
 }
 
 window.initMap = function () {
-  window._gymMapsLoaded = true;
-  const lat = window._initLat || 0;
-  const lng = window._initLng || 0;
+  window._gymMapsLoaded   = true;
+  window._gymMapsLoading  = false;
 
-  document.getElementById('gymPlaceholder').style.display = 'none';
+  // Build map in a neutral location; actual view set in doSearchAt
   const mapEl = document.getElementById('map');
   mapEl.style.display = 'block';
 
   _gymMap = new google.maps.Map(mapEl, {
-    center: { lat: lat || 51.505, lng: lng || -0.09 },
+    center: { lat: 51.505, lng: -0.09 },
     zoom: 13,
     styles: [
       { elementType:'geometry',           stylers:[{color:'#f5f0eb'}] },
@@ -1181,32 +1194,59 @@ window.initMap = function () {
   });
   _gymService = new google.maps.places.PlacesService(_gymMap);
 
-  // Autocomplete on search input
-  const ac = new google.maps.places.Autocomplete(
-    document.getElementById('gymSearchInput'),
-    { fields: ['geometry', 'formatted_address', 'name'] }
-  );
+  // Autocomplete — now that Maps is loaded, set it up on the search input
+  const searchEl = document.getElementById('gymSearchInput');
+  const ac = new google.maps.places.Autocomplete(searchEl, {
+    fields: ['geometry', 'formatted_address', 'name']
+  });
   ac.addListener('place_changed', () => {
     const place = ac.getPlace();
-    if (place.geometry) {
-      doSearchAt(place.geometry.location.lat(), place.geometry.location.lng(), place.name || place.formatted_address);
+    if (place && place.geometry) {
+      doSearchAt(
+        place.geometry.location.lat(),
+        place.geometry.location.lng(),
+        place.name || place.formatted_address
+      );
     }
   });
 
+  // Enter key support
+  searchEl.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); searchLocation(); }
+  });
+
+  // Flush any pending actions
   if (window._pendingSearch) {
-    _geocodeAndSearch(window._pendingSearch);
+    const q = window._pendingSearch;
     window._pendingSearch = null;
-  } else if (lat !== 0) {
+    _geocodeAndSearch(q);
+  } else if (window._pendingLat != null) {
+    const lat = window._pendingLat, lng = window._pendingLng;
+    window._pendingLat = window._pendingLng = null;
     doSearchAt(lat, lng, 'My Location');
+  } else {
+    // Maps loaded silently — hide placeholder until user acts
+    document.getElementById('gymPlaceholder').style.display = 'none';
+    document.getElementById('gymList').style.display = 'none';
+    mapEl.style.display = 'none';
   }
 };
 
 function doSearchAt(lat, lng, label) {
-  // Clear old markers
+  const placeholder = document.getElementById('gymPlaceholder');
+  const mapEl       = document.getElementById('map');
+  const gymList     = document.getElementById('gymList');
+
+  placeholder.style.display = 'none';
+  mapEl.style.display       = 'block';
+  gymList.style.display     = 'block';
+  gymList.innerHTML = '<p style="color:var(--text-soft);font-size:13px;text-align:center;padding:16px;">🔍 Finding fitness venues nearby…</p>';
+
+  // Clear old markers & re-centre map
   _gymMarkers.forEach(m => m.setMap(null));
   _gymMarkers = [];
-
   _gymMap.setCenter({ lat, lng });
+  google.maps.event.trigger(_gymMap, 'resize');
 
   const centerMarker = new google.maps.Marker({
     map: _gymMap, position: { lat, lng },
@@ -1215,12 +1255,8 @@ function doSearchAt(lat, lng, label) {
   });
   _gymMarkers.push(centerMarker);
 
-  const gymList = document.getElementById('gymList');
-  gymList.style.display = 'block';
-  gymList.innerHTML = '<p style="color:var(--text-soft);font-size:13px;text-align:center;padding:16px;">🔍 Finding fitness venues nearby...</p>';
-
   _gymService.nearbySearch(
-    { location:{lat,lng}, radius:4828, type:'gym' },
+    { location:{lat, lng}, radius:4828, type:'gym' },
     (results, status) => {
       if (status !== google.maps.places.PlacesServiceStatus.OK || !results.length) {
         gymList.innerHTML = '<p style="color:var(--text-soft);font-size:13px;text-align:center;padding:16px;">No fitness venues found within 3 miles.</p>';
@@ -1232,6 +1268,11 @@ function doSearchAt(lat, lng, label) {
         .filter(p => p.dist <= 3)
         .sort((a,b) => a.dist - b.dist)
         .slice(0, 8);
+
+      if (!sorted.length) {
+        gymList.innerHTML = '<p style="color:var(--text-soft);font-size:13px;text-align:center;padding:16px;">No fitness venues found within 3 miles.</p>';
+        return;
+      }
 
       sorted.forEach(p => {
         const m = new google.maps.Marker({
@@ -1258,10 +1299,6 @@ function doSearchAt(lat, lng, label) {
       });
 
       function renderGymList() {
-        if (!items.length) {
-          gymList.innerHTML = '<p style="color:var(--text-soft);font-size:13px;text-align:center;padding:16px;">No venues found within 3 miles.</p>';
-          return;
-        }
         gymList.innerHTML = items.map(({ place, hours }) => {
           const isOpen    = hours?.isOpen?.() ?? null;
           const openBadge = isOpen === null
