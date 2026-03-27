@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /home/user/woojintest && git add -A && git diff --cached --quiet || (git commit -m \"auto: save work\" && git push origin main) 2>&1 | tail -5",
+            "timeout": 60,
+            "statusMessage": "GitHub에 자동 업로드 중..."
+          }
+        ]
+      }
+    ]
+  }
+}
