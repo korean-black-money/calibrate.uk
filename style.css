@@ -135,8 +135,24 @@ button[type="submit"]:disabled {
   display: none;
 }
 
+.disqus-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  margin-top: 24px;
+}
+
+.disqus-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #1a1a2e;
+}
+
 @media (max-width: 480px) {
-  .form-card {
+  .form-card,
+  .disqus-card {
     padding: 32px 24px;
   }
 
