@@ -188,7 +188,6 @@
       outline: none;
       width: 100%;
       -webkit-appearance: none;
-      appearance: none;
     }
     .form-group input:focus,
     .form-group select:focus {
@@ -711,8 +710,9 @@
     </form>
   </div>
 
+  <!-- ── RESULTS ── -->
   <!-- AdSense 광고 슬롯 -->
-  <div style="margin-bottom:16px;">
+  <div style="max-width:680px;margin:0 auto 24px;padding:0 20px;">
     <ins class="adsbygoogle"
          style="display:block"
          data-ad-client="ca-pub-9247222675222330"
@@ -722,7 +722,6 @@
     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
   </div>
 
-  <!-- ── RESULTS ── -->
   <div id="resultsSection">
 
     <div class="email-banner" id="emailBanner">
@@ -823,7 +822,7 @@ const CONFIG = {
   emailjs_public_key : 'tc-AW0DXRU_Qd8oyw',
   emailjs_service_id : 'service_offb76e',
   emailjs_template_id: 'template_86uskse',
-  google_maps_key    : 'YOUR_GOOGLE_MAPS_API_KEY',
+  google_maps_key    : 'AIzaSyDDWQAQS6USWoeyXQsD_QUlqrAdUABEwEI',
 };
 
 /* ═══════════════════════
@@ -959,7 +958,7 @@ function renderFoodRecs(goal) {
 async function sendEmail(email, data) {
   if (CONFIG.emailjs_public_key === 'YOUR_PUBLIC_KEY') {
     showEmailBanner(email);
-    showToast('📬 EmailJS 연결 후 실제 발송됩니다');
+    showToast('📧 EmailJS 연결 후 실제 발송됩니다');
     return;
   }
   const btn = document.getElementById('calcBtn');
