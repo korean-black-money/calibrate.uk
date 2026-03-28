@@ -377,6 +377,7 @@
         <div><div class="card-title">Fitness Venues Near You</div><div class="card-subtitle">Gyms, F45, CrossFit, Pilates and more · within 3 miles</div></div>
       </div>
 
+      <!-- 자동 위치 감지 배너 -->
       <div class="location-banner" id="locationBanner">
         <div class="loc-icon">📍</div>
         <div>
@@ -385,6 +386,7 @@
         </div>
       </div>
 
+      <!-- 수동 검색 -->
       <div class="gym-search-row">
         <input type="text" id="gymSearchInput" placeholder="Or search any location (e.g. Manchester City Centre)" />
         <button class="btn-gym-search" onclick="searchLocation()">🔍 Search</button>
@@ -458,9 +460,13 @@ function getFoodRecs(g) {
 
 function renderFoodRecs(goal) {
   const recs = getFoodRecs(goal);
-  document.getElementById('foodGrid').innerHTML = Object.entries(recs).map(([cat, items]) =>
-    `<div class="food-cat"><h4>${cat}</h4><ul>${items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`
-  ).join('');
+  const grid = document.getElementById('foodGrid');
+  grid.innerHTML = Object.entries(recs).map(([cat, items]) => `
+    <div class="food-cat">
+      <h4>${cat}</h4>
+      <ul>${items.map(i => `<li>${i}</li>`).join('')}</ul>
+    </div>
+  `).join('');
 }
 
 const unitState = { height: 'imperial', weight: 'imperial' };
@@ -525,13 +531,17 @@ function calculateAndShow() {
   document.getElementById('resultsSection').style.display = 'block';
   setTimeout(() => document.getElementById('resultsSection').scrollIntoView({ behavior:'smooth', block:'start' }), 60);
 
+  // 지도 API 미리 로드
   _bootstrapMaps();
+
+  // ★ 자동 위치 감지 시작
   autoDetectLocation();
 
   if (email) sendEmail(email, { tdee, proteinG, fatG, carbG, goal, gender, age,
     heightDisplay: fmtHeight(form), weightDisplay: fmtWeight(form) });
 }
 
+// ★ 자동 위치 감지
 function autoDetectLocation() {
   if (!navigator.geolocation) {
     document.getElementById('locationBanner').style.display = 'none';
@@ -549,6 +559,7 @@ function autoDetectLocation() {
       }
     },
     () => {
+      // 위치 거부 시 수동 검색으로 안내
       document.getElementById('locationBanner').style.display = 'none';
       document.getElementById('gymPlaceholder').style.display = 'block';
       showToast('📍 Location denied — search a city instead');
@@ -650,19 +661,11 @@ window.initMap = function () {
   });
   _gymService = new google.maps.places.PlacesService(_gymMap);
 
+  // 검색창 Enter 키 지원 (Autocomplete 없이 깔끔하게)
   const searchEl = document.getElementById('gymSearchInput');
-  const ac = new google.maps.places.Autocomplete(searchEl, {
-    fields: ['geometry','formatted_address','name']
-  });
-  ac.addListener('place_changed', () => {
-    const place = ac.getPlace();
-    if (place && place.geometry) {
-      document.getElementById('locationBanner').style.display = 'none';
-      doSearchAt(place.geometry.location.lat(), place.geometry.location.lng(), place.name || place.formatted_address);
-    }
-  });
   searchEl.addEventListener('keydown', e => { if (e.key==='Enter') { e.preventDefault(); searchLocation(); } });
 
+  // Flush pending actions
   if (window._pendingSearch) {
     const q = window._pendingSearch;
     window._pendingSearch = null;
