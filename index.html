@@ -651,6 +651,72 @@
       letter-spacing: 0.2px;
       margin-bottom: 8px;
     }
+    .workout-advice-wrap {
+      display: none;
+      margin-top: 18px;
+    }
+    .workout-advice-card {
+      background: linear-gradient(135deg, #fff9f4, #fdf5ed);
+      border: 1px solid #e8cdb0;
+      border-radius: 16px;
+      padding: 18px;
+    }
+    .workout-advice-card h3 {
+      font-size: 16px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .workout-advice-card p {
+      font-size: 13px;
+      color: var(--text-mid);
+      line-height: 1.65;
+    }
+    .workout-advice-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      margin: 14px 0 8px;
+    }
+    .workout-advice-stat {
+      background: rgba(255,255,255,0.7);
+      border: 1px solid #eedacc;
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .workout-advice-stat .label {
+      display: block;
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+    }
+    .workout-advice-stat .value {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .workout-advice-sections {
+      display: grid;
+      gap: 14px;
+      margin-top: 12px;
+    }
+    .workout-advice-sections h4 {
+      font-size: 13px;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .workout-advice-sections ul {
+      padding-left: 18px;
+      font-size: 13px;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+    .workout-advice-note {
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
     .gym-count-badge {
       font-size: 12px;
       color: var(--text-soft);
@@ -1068,6 +1134,7 @@
 
       <div id="map"></div>
       <div id="gymList" class="gym-list"></div>
+      <div id="workoutAdvice" class="workout-advice-wrap"></div>
     </div>
 
     <div id="resultsSection">
@@ -1495,20 +1562,146 @@
         .slice(0, 5);
 
       return {
+        summary: {
+          bmi: bmi,
+          level: level,
+          impactLevel: impactLevel,
+          goal: user.goal
+        },
         recommendedWorkouts: workoutTypes,
-        recommendedFacilities: scoredFacilities
+        recommendedFacilities: scoredFacilities,
+        weeklyPlan: buildWeeklyPlan(user.goal, level),
+        reason: buildRecommendationReason({
+          goal: user.goal,
+          level: level,
+          activityLevel: user.activityLevel,
+          impactLevel: impactLevel
+        }),
+        disclaimer: 'This is a general fitness recommendation, not medical advice. Anyone with pain, injury, pregnancy, or a medical condition should consult a qualified professional before starting a new routine.'
       };
     }
 
-    function getFacilityRecommendationRanks(nearbyPlaces) {
-      var form = document.forms['bmrForm'];
-      if (!form || !nearbyPlaces || !nearbyPlaces.length) return {};
+    function buildWeeklyPlan(goal, level) {
+      if (goal === 'aggressive_fat_loss') {
+        if (level === 'beginner') {
+          return [
+            'Mon: 30 min brisk walk + 15 min machine strength',
+            'Tue: Mobility or stretching 15-20 min',
+            'Wed: 30 min cycling or walking',
+            'Thu: Light recovery walk',
+            'Fri: 20-30 min full-body gym session',
+            'Sat: 30-40 min walk',
+            'Sun: Rest'
+          ];
+        }
+        return [
+          'Mon: Strength training 45 min',
+          'Tue: Cardio 30-40 min',
+          'Wed: Recovery / mobility',
+          'Thu: Strength training 45 min',
+          'Fri: Intervals or circuit 20-30 min',
+          'Sat: Long walk or cardio 40 min',
+          'Sun: Rest'
+        ];
+      }
+      if (goal === 'moderate_fat_loss') {
+        return [
+          'Mon: Brisk walk 30 min',
+          'Tue: Full-body strength 35-45 min',
+          'Wed: Light walk or mobility',
+          'Thu: Cycling or walk 30 min',
+          'Fri: Full-body strength 35-45 min',
+          'Sat: Optional swim or light cardio',
+          'Sun: Rest'
+        ];
+      }
+      if (goal === 'lean_maintenance' || goal === 'healthy_balance') {
+        return [
+          'Mon: Strength training 30-40 min',
+          'Tue: Walking 30 min',
+          'Wed: Yoga / mobility 20 min',
+          'Thu: Strength training 30-40 min',
+          'Fri: Light cardio 25-30 min',
+          'Sat: Optional swim / yoga / outdoor walk',
+          'Sun: Rest'
+        ];
+      }
+      if (goal === 'lean_bulk') {
+        return [
+          'Mon: Upper body strength',
+          'Tue: Lower body strength',
+          'Wed: Mobility or light cardio',
+          'Thu: Upper body hypertrophy',
+          'Fri: Lower body hypertrophy',
+          'Sat: Light cardio 15-20 min',
+          'Sun: Rest'
+        ];
+      }
+      if (goal === 'mass_gain') {
+        return [
+          'Mon: Upper body strength',
+          'Tue: Lower body strength',
+          'Wed: Recovery / mobility',
+          'Thu: Push-pull hypertrophy',
+          'Fri: Legs / posterior chain',
+          'Sat: Optional accessory work',
+          'Sun: Rest'
+        ];
+      }
+      if (goal === 'performance') {
+        return [
+          'Mon: Strength + power',
+          'Tue: Conditioning / intervals',
+          'Wed: Recovery / mobility',
+          'Thu: Strength training',
+          'Fri: Athletic circuit or sprint work',
+          'Sat: Sport-specific or endurance session',
+          'Sun: Rest'
+        ];
+      }
+      return ['Mon: Walk 30 min', 'Wed: Strength session 30 min', 'Fri: Mobility 20 min'];
+    }
 
+    function buildRecommendationReason(opts) {
+      var labels = {
+        aggressive_fat_loss: 'aggressive fat loss',
+        moderate_fat_loss: 'moderate fat loss',
+        lean_maintenance: 'lean maintenance',
+        healthy_balance: 'healthy balance',
+        lean_bulk: 'lean bulk',
+        mass_gain: 'muscle and mass gain',
+        performance: 'performance improvement'
+      };
+      var text = 'Your goal is ' + (labels[opts.goal] || opts.goal) + ', and your current training level is ' + opts.level + '. ';
+      if (opts.activityLevel === 'low') text += 'Because your daily activity level is low, the recommendation prioritizes consistency and realistic progression. ';
+      if (opts.impactLevel === 'high') text += 'Higher-impact options were reduced to lower joint stress and improve adherence. ';
+      if (opts.goal === 'aggressive_fat_loss' || opts.goal === 'moderate_fat_loss') text += 'The plan combines calorie-burning activity with strength work to support body composition and routine sustainability.';
+      else if (opts.goal === 'lean_bulk' || opts.goal === 'mass_gain') text += 'The plan prioritizes resistance training and limits unnecessary cardio volume.';
+      else if (opts.goal === 'performance') text += 'The plan emphasizes strength, conditioning, and athletic development.';
+      else text += 'The plan emphasizes balanced movement, strength, and recovery.';
+      return text;
+    }
+
+    function formatRecommendationGoal(goal) {
+      var labels = {
+        aggressive_fat_loss: 'Aggressive fat loss',
+        moderate_fat_loss: 'Moderate fat loss',
+        lean_maintenance: 'Lean maintenance',
+        healthy_balance: 'Healthy balance',
+        lean_bulk: 'Muscle building (lean bulk)',
+        mass_gain: 'Muscle & mass gain',
+        performance: 'Performance / athletic'
+      };
+      return labels[goal] || goal;
+    }
+
+    function getFacilityRecommendationResult(nearbyPlaces) {
+      var form = document.forms['bmrForm'];
+      if (!form || !nearbyPlaces || !nearbyPlaces.length) return null;
       var age = parseInt(form.elements['age'].value, 10);
       var heightCm = getHeightCm(form);
       var weightKg = getWeightKg(form);
-      if (!age || heightCm < 100 || weightKg < 20) return {};
-
+      if (!age || heightCm < 100 || weightKg < 20) return null;
       var user = {
         goal: mapGoalToRecommendationKey(form.elements['goal'].value),
         weeklyExercise: mapTrainingDaysToWeeklyExercise(form.elements['trainingDays'].value),
@@ -1518,7 +1711,6 @@
         age: age,
         sex: String(form.elements['gender'].value || '').toLowerCase()
       };
-
       var facilities = nearbyPlaces.map(function (place) {
         return {
           id: place.id,
@@ -1529,13 +1721,64 @@
           rating: place.rating || null
         };
       });
+      return recommendWorkout(user, facilities);
+    }
 
-      var result = recommendWorkout(user, facilities);
+    function getFacilityRecommendationRanks(nearbyPlaces) {
+      var result = getFacilityRecommendationResult(nearbyPlaces);
+      if (!result) return {};
       var ranks = {};
       result.recommendedFacilities.forEach(function (place, index) {
         if (place.id) ranks[place.id] = index + 1;
       });
       return ranks;
+    }
+
+    function refreshGymRecommendationBadges(nearbyPlaces) {
+      var gymList = document.getElementById('gymList');
+      if (!gymList) return;
+      var ranks = getFacilityRecommendationRanks(nearbyPlaces || []);
+      var cards = gymList.querySelectorAll('.gym-item[data-place-id]');
+
+      cards.forEach(function (card) {
+        var body = card.querySelector('.gym-item-body');
+        var name = body ? body.querySelector('.gym-name') : null;
+        var oldBadge = body ? body.querySelector('.gym-recommend-badge') : null;
+        var rank = ranks[card.getAttribute('data-place-id')] || null;
+
+        if (oldBadge) oldBadge.remove();
+        if (body && name && rank) {
+          name.insertAdjacentHTML('beforebegin', '<div class="gym-recommend-badge">#' + rank + '</div>');
+        }
+      });
+    }
+
+    function renderWorkoutAdvice(nearbyPlaces) {
+      var target = document.getElementById('workoutAdvice');
+      if (!target) return;
+      var result = getFacilityRecommendationResult(nearbyPlaces);
+      if (!result) {
+        target.style.display = 'none';
+        target.innerHTML = '';
+        return;
+      }
+      target.style.display = 'block';
+      target.innerHTML =
+        '<div class="workout-advice-card">' +
+          '<h3>How you should train</h3>' +
+          '<p>' + escapeHtml(result.reason) + '</p>' +
+          '<div class="workout-advice-grid">' +
+            '<div class="workout-advice-stat"><span class="label">Goal</span><span class="value">' + escapeHtml(formatRecommendationGoal(result.summary.goal)) + '</span></div>' +
+            '<div class="workout-advice-stat"><span class="label">Level</span><span class="value">' + escapeHtml(result.summary.level) + '</span></div>' +
+            '<div class="workout-advice-stat"><span class="label">BMI</span><span class="value">' + (result.summary.bmi === null ? 'N/A' : escapeHtml(String(result.summary.bmi))) + '</span></div>' +
+            '<div class="workout-advice-stat"><span class="label">Impact</span><span class="value">' + escapeHtml(result.summary.impactLevel) + '</span></div>' +
+          '</div>' +
+          '<div class="workout-advice-sections">' +
+            '<div><h4>Recommended workout types</h4><ul>' + result.recommendedWorkouts.map(function (item) { return '<li>' + escapeHtml(item) + '</li>'; }).join('') + '</ul></div>' +
+            '<div><h4>Suggested weekly routine</h4><ul>' + result.weeklyPlan.map(function (item) { return '<li>' + escapeHtml(item) + '</li>'; }).join('') + '</ul></div>' +
+          '</div>' +
+          '<p class="workout-advice-note">' + escapeHtml(result.disclaimer) + '</p>' +
+        '</div>';
     }
 
     function calculateAndShow() {
@@ -1572,6 +1815,8 @@
       renderFoodRecs(goal);
 
       document.getElementById('resultsSection').style.display = 'block';
+      refreshGymRecommendationBadges(window._lastGymResults || []);
+      renderWorkoutAdvice(window._lastGymResults || []);
 
       setTimeout(() => {
         document.getElementById('resultsSection').scrollIntoView({
@@ -1607,6 +1852,7 @@
     var _activeGymSearchToken = 0;
     var _fitnessSectionReady = false;
     var _manualSearchActive = false;
+    var _lastGymResults = [];
 
     function calcMiles(lat1, lng1, lat2, lng2) {
       var R = 3958.8;
@@ -2074,6 +2320,8 @@
         if (searchToken !== _activeGymSearchToken) return;
 
         if (error) {
+          _lastGymResults = [];
+          renderWorkoutAdvice([]);
           gymList.innerHTML = '<p style="color:var(--text-soft);font-size:13px;text-align:center;padding:20px;">Unable to load fitness venues right now. Please try again shortly.</p>';
           setGymStatus('Venue search unavailable', error.message || 'Places API (New) request failed.');
           return;
@@ -2094,6 +2342,8 @@
           .slice(0, 12);
 
         if (!sorted.length) {
+          _lastGymResults = [];
+          renderWorkoutAdvice([]);
           gymList.innerHTML = '<p style="color:var(--text-soft);font-size:13px;text-align:center;padding:20px;">No fitness venues found within ' + SEARCH_RADIUS_MILES + ' miles. Try searching a different area.</p>';
           setGymStatus('No venues found', 'No fitness venues were returned within ' + SEARCH_RADIUS_MILES + ' miles of ' + label + '.');
           return;
@@ -2141,7 +2391,9 @@
           _gymMap.fitBounds(bounds, 60);
         }
 
+        _lastGymResults = sorted;
         renderGymList(sorted);
+        renderWorkoutAdvice(sorted);
 
         function renderGymList(items) {
           var recommendationRanks = getFacilityRecommendationRanks(items);
@@ -2171,9 +2423,9 @@
               var mapsUrl = place.googleMapsUri || ('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(place.name + ' ' + (place.formattedAddress || '')));
 
               return (
-                '<div class="gym-item">' +
+                '<div class="gym-item" data-place-id="' + escapeHtml(place.id || '') + '">' +
                   '<div class="gym-icon-wrap">' + escapeHtml(ft.emoji) + '</div>' +
-                  '<div style="flex:1;min-width:0;">' +
+                  '<div class="gym-item-body" style="flex:1;min-width:0;">' +
                     (recommendationRank ? '<div class="gym-recommend-badge">#' + recommendationRank + '</div>' : '') +
                     '<div class="gym-name">' + escapeHtml(place.name) + '</div>' +
                     '<div class="gym-meta">' +
