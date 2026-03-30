@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calibrate — Precision Nutrition for Women</title>
+  <title>Calibrate - Precision Nutrition for Women</title>
   <meta name="google-adsense-account" content="ca-pub-9247222675222330" />
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -514,7 +514,7 @@
     .gym-search-row {
       display: flex;
       gap: 8px;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
     }
     .gym-search-row input {
       flex: 1;
@@ -549,6 +549,26 @@
       transition: background 0.2s;
     }
     .btn-gym-search:hover { background: var(--primary-dark); }
+
+    .gym-status {
+      display: none;
+      background: #fff9f4;
+      border: 1px solid #e8cdb0;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+    }
+    .gym-status strong {
+      display: block;
+      font-size: 13px;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+    .gym-status p {
+      font-size: 12px;
+      color: var(--text-soft);
+      line-height: 1.5;
+    }
 
     #map {
       width: 100%;
@@ -811,6 +831,7 @@
       .form-row { grid-template-columns: 1fr; }
       .food-grid { grid-template-columns: 1fr; }
       .hero { padding: 48px 16px 36px; }
+      .gym-search-row { flex-direction: column; }
     }
   </style>
 </head>
@@ -831,7 +852,7 @@
     </div>
 
     <h1>Your body,<br><em>precisely understood.</em></h1>
-    <p class="hero-sub">Get a personalised nutrition plan built around your body, lifestyle and goals — in under a minute.</p>
+    <p class="hero-sub">Get a personalised nutrition plan built around your body, lifestyle and goals - in under a minute.</p>
 
     <div class="hero-pills">
       <span class="pill">✦ Science-backed</span>
@@ -929,11 +950,11 @@
         <div class="form-group" style="margin-bottom:12px;">
           <label>Daily Activity Level</label>
           <select name="activity">
-            <option value="1">Sedentary — under 4,000 steps</option>
-            <option value="1.05">Lightly active — 4,000–6,000 steps</option>
-            <option value="1.1" selected>Moderately active — 6,000–10,000 steps</option>
-            <option value="1.125">Active — 10,000–15,000 steps</option>
-            <option value="1.15">Very active — 15,000+ steps</option>
+            <option value="1">Sedentary - under 4,000 steps</option>
+            <option value="1.05">Lightly active - 4,000-6,000 steps</option>
+            <option value="1.1" selected>Moderately active - 6,000-10,000 steps</option>
+            <option value="1.125">Active - 10,000-15,000 steps</option>
+            <option value="1.15">Very active - 15,000+ steps</option>
             <option value="1.35">High intensity training (amateur)</option>
             <option value="1.4">Semi-professional athlete</option>
           </select>
@@ -971,7 +992,7 @@
           <div class="form-group">
             <input type="email" name="email" placeholder="your@email.com" />
           </div>
-          <p class="email-note">We'll send your full plan, nearby fitness venues &amp; curated product picks — no spam, ever.</p>
+          <p class="email-note">We'll send your full plan, nearby fitness venues &amp; curated product picks - no spam, ever.</p>
         </div>
 
         <button type="button" class="btn-primary" id="calcBtn" onclick="calculateAndShow()">
@@ -1004,7 +1025,7 @@
       <div class="card">
         <div class="tdee-display">
           <div class="tdee-label">Daily Calorie Target (TDEE)</div>
-          <div class="tdee-value" id="tdeeValue">—</div>
+          <div class="tdee-value" id="tdeeValue">-</div>
           <div class="tdee-unit">kcal / day</div>
           <div class="goal-tag" id="goalTag">Healthy balance</div>
         </div>
@@ -1013,19 +1034,19 @@
           <div class="macro-card protein">
             <div class="macro-icon">🥩</div>
             <div class="macro-label">Protein</div>
-            <div class="macro-value" id="proteinValue">—</div>
+            <div class="macro-value" id="proteinValue">-</div>
             <div class="macro-unit">g / day</div>
           </div>
           <div class="macro-card fat">
             <div class="macro-icon">🥑</div>
             <div class="macro-label">Fats</div>
-            <div class="macro-value" id="fatValue">—</div>
+            <div class="macro-value" id="fatValue">-</div>
             <div class="macro-unit">g / day</div>
           </div>
           <div class="macro-card carbs">
             <div class="macro-icon">🌾</div>
             <div class="macro-label">Carbs</div>
-            <div class="macro-value" id="carbsValue">—</div>
+            <div class="macro-value" id="carbsValue">-</div>
             <div class="macro-unit">g / day</div>
           </div>
         </div>
@@ -1080,6 +1101,11 @@
           <button type="button" class="btn-gym-search" onclick="searchLocation()">🔍 Search</button>
         </div>
 
+        <div id="gymStatus" class="gym-status">
+          <strong id="gymStatusTitle"></strong>
+          <p id="gymStatusText"></p>
+        </div>
+
         <div id="gymPlaceholder" class="gym-placeholder" style="display:none;">
           <p>📍 Allow location access or search a city above to find fitness venues within 3 miles</p>
           <button type="button" class="btn-location" onclick="requestLocation()">📍 Try Again</button>
@@ -1092,7 +1118,7 @@
       <div class="product-cta">
         <div class="cta-icon">✨</div>
         <h3>Products curated for your goal</h3>
-        <p>Our team has handpicked supplements and nutrition products that align with your specific targets — so you spend less time researching and more time progressing.</p>
+        <p>Our team has handpicked supplements and nutrition products that align with your specific targets - so you spend less time researching and more time progressing.</p>
         <a href="#" class="btn-shop">Browse Recommendations →</a>
       </div>
     </div>
@@ -1142,6 +1168,20 @@
         '🍽️ Meal Ideas': ['Rice + steak', 'Pasta + chicken', 'Protein shake + banana'],
       },
     };
+
+    const FITNESS_QUERIES = [
+      { type: 'gym' },
+      { keyword: 'crossfit' },
+      { keyword: 'f45 training' },
+      { keyword: 'pilates studio' },
+      { keyword: 'yoga studio' },
+      { keyword: 'boxing gym' },
+      { keyword: 'spin cycling class' },
+      { keyword: 'barre fitness' },
+    ];
+
+    const SEARCH_RADIUS_MILES = 3;
+    const SEARCH_RADIUS_METERS = 4828;
 
     function getFoodRecs(goalValue) {
       const v = parseFloat(goalValue);
@@ -1199,12 +1239,27 @@
 
     function fmtHeight(form) {
       if (unitState.height === 'metric') return `${Math.round(getHeightCm(form))} cm`;
-      return `${form.elements['height_ft'].value || '—'}ft ${form.elements['height_in'].value || '0'}in`;
+      return `${form.elements['height_ft'].value || '-'}ft ${form.elements['height_in'].value || '0'}in`;
     }
 
     function fmtWeight(form) {
       if (unitState.weight === 'metric') return `${Math.round(getWeightKg(form))} kg`;
-      return `${form.elements['weight_st'].value || '—'} st ${form.elements['weight_lbs'].value || '0'} lbs`;
+      return `${form.elements['weight_st'].value || '-'} st ${form.elements['weight_lbs'].value || '0'} lbs`;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function setGymStatus(title, text) {
+      document.getElementById('gymStatusTitle').textContent = title;
+      document.getElementById('gymStatusText').textContent = text;
+      document.getElementById('gymStatus').style.display = 'block';
     }
 
     function calculateAndShow() {
@@ -1241,6 +1296,7 @@
       renderFoodRecs(goal);
 
       document.getElementById('resultsSection').style.display = 'block';
+      setGymStatus('Preparing map', 'We will mark your current location automatically or use the place you search for.');
 
       setTimeout(() => {
         document.getElementById('resultsSection').scrollIntoView({
@@ -1324,7 +1380,8 @@
         window._gymMapsLoading = false;
         window._gymMapsError = true;
 
-        showToast('❌ Maps failed to load — check your connection and try refreshing');
+        showToast('❌ Maps failed to load - check your connection and try refreshing');
+        setGymStatus('Map unavailable', 'Google Maps could not be loaded, so nearby venue search cannot start.');
         document.getElementById('gymPlaceholder').style.display = 'block';
         document.getElementById('locationBanner').style.display = 'none';
         document.getElementById('gymPlaceholder').querySelector('p').textContent =
@@ -1407,8 +1464,11 @@
       if (!navigator.geolocation) {
         document.getElementById('locationBanner').style.display = 'none';
         document.getElementById('gymPlaceholder').style.display = 'block';
+        setGymStatus('Location not supported', 'This browser does not support geolocation, so please search for a place manually.');
         return;
       }
+
+      setGymStatus('Finding your location', 'Grant browser permission to place your live location on the map and search within 3 miles.');
 
       navigator.geolocation.getCurrentPosition(
         function (pos) {
@@ -1417,6 +1477,7 @@
 
           document.getElementById('locationBanner').style.display = 'none';
           document.getElementById('gymPlaceholder').style.display = 'none';
+          setGymStatus('Current location detected', 'Showing venues within ' + SEARCH_RADIUS_MILES + ' miles of your live location.');
 
           if (window._gymMapsLoaded) {
             doSearchAt(_userLat, _userLng, 'My Location', true);
@@ -1428,7 +1489,8 @@
         function () {
           document.getElementById('locationBanner').style.display = 'none';
           document.getElementById('gymPlaceholder').style.display = 'block';
-          showToast('📍 Location denied — search a city instead');
+          setGymStatus('Location permission denied', 'You can still search for any city or neighbourhood and we will show venues within 3 miles of that point.');
+          showToast('📍 Location denied - search a city instead');
         },
         {
           enableHighAccuracy: true,
@@ -1441,10 +1503,12 @@
     function requestLocation() {
       if (!navigator.geolocation) {
         showToast('Geolocation not supported');
+        setGymStatus('Location not supported', 'This browser cannot share your position, so search for a place manually.');
         return;
       }
 
       showToast('📡 Finding your location...');
+      setGymStatus('Refreshing location', 'Trying again to place your current position on the map.');
 
       navigator.geolocation.getCurrentPosition(
         function (pos) {
@@ -1464,6 +1528,7 @@
         },
         function () {
           showToast('⚠️ Location access denied');
+          setGymStatus('Location permission denied', 'Please use the search box above to search around another location.');
         },
         {
           enableHighAccuracy: true,
@@ -1482,12 +1547,13 @@
       }
 
       if (window._gymMapsError) {
-        showToast('❌ Maps failed to load — please refresh the page');
+        showToast('❌ Maps failed to load - please refresh the page');
         return;
       }
 
       document.getElementById('locationBanner').style.display = 'none';
       document.getElementById('gymPlaceholder').style.display = 'none';
+      setGymStatus('Searching location', 'Moving the map to "' + input + '" and looking for venues within ' + SEARCH_RADIUS_MILES + ' miles.');
 
       _bootstrapMaps();
 
@@ -1513,23 +1579,18 @@
 
           doSearchAt(_searchLat, _searchLng, _searchLabel, false);
         } else {
-          showToast('⚠️ Location not found — try a more specific address');
+          setGymStatus('Location not found', 'Try a more specific place name, postcode, or neighbourhood.');
+          showToast('⚠️ Location not found - try a more specific address');
         }
       });
     }
 
-    var FITNESS_QUERIES = [
-      { type: 'gym' },
-      { keyword: 'crossfit' },
-      { keyword: 'f45 training' },
-      { keyword: 'pilates studio' },
-      { keyword: 'yoga studio' },
-      { keyword: 'boxing gym' },
-      { keyword: 'spin cycling class' },
-      { keyword: 'barre fitness' },
-    ];
-
     function searchAllFitnessVenues(lat, lng, onDone) {
+      if (!_gymService) {
+        onDone([]);
+        return;
+      }
+
       var seen = {};
       var results = [];
       var pending = FITNESS_QUERIES.length;
@@ -1537,7 +1598,7 @@
       FITNESS_QUERIES.forEach(function (params) {
         var req = {
           location: { lat: lat, lng: lng },
-          radius: 4828
+          radius: SEARCH_RADIUS_METERS
         };
 
         if (params.type) req.type = params.type;
@@ -1603,12 +1664,18 @@
       mapEl.style.display = 'block';
       gymList.style.display = 'block';
 
+      setGymStatus(
+        isUserLocation ? 'Showing venues near your live location' : 'Showing venues near ' + label,
+        'Results are filtered to facilities within ' + SEARCH_RADIUS_MILES + ' miles of the selected point.'
+      );
+
       gymList.innerHTML = '<p style="color:var(--text-soft);font-size:13px;text-align:center;padding:20px;">🔍 Searching for fitness venues nearby...</p>';
 
       _gymMarkers.forEach(function (m) { m.setMap(null); });
       _gymMarkers = [];
 
       _gymMap.setCenter({ lat: lat, lng: lng });
+      _gymMap.panTo({ lat: lat, lng: lng });
       _gymMap.setZoom(14);
       google.maps.event.trigger(_gymMap, 'resize');
 
@@ -1645,7 +1712,7 @@
             });
           })
           .filter(function (p) {
-            return p.dist <= 3;
+            return p.dist <= SEARCH_RADIUS_MILES;
           })
           .sort(function (a, b) {
             return a.dist - b.dist;
@@ -1653,7 +1720,8 @@
           .slice(0, 12);
 
         if (!sorted.length) {
-          gymList.innerHTML = '<p style="color:var(--text-soft);font-size:13px;text-align:center;padding:20px;">No fitness venues found within 3 miles. Try searching a different area.</p>';
+          gymList.innerHTML = '<p style="color:var(--text-soft);font-size:13px;text-align:center;padding:20px;">No fitness venues found within ' + SEARCH_RADIUS_MILES + ' miles. Try searching a different area.</p>';
+          setGymStatus('No venues found', 'No fitness venues were returned within ' + SEARCH_RADIUS_MILES + ' miles of ' + label + '.');
           return;
         }
 
@@ -1680,9 +1748,9 @@
           var iw = new google.maps.InfoWindow({
             content:
               '<div style="font-family:Inter,sans-serif;padding:2px 4px;">' +
-                '<b style="font-size:13px;">' + ft.emoji + ' ' + p.name + '</b><br>' +
+                '<b style="font-size:13px;">' + escapeHtml(ft.emoji + ' ' + p.name) + '</b><br>' +
                 '<span style="font-size:12px;color:#6b5c54;">📍 ' + p.dist.toFixed(1) + ' mi away</span><br>' +
-                '<span style="font-size:12px;color:#6b5c54;">🏷 ' + ft.label + '</span>' +
+                '<span style="font-size:12px;color:#6b5c54;">🏷 ' + escapeHtml(ft.label) + '</span>' +
               '</div>'
           });
 
@@ -1708,7 +1776,7 @@
           _gymService.getDetails(
             {
               placeId: place.place_id,
-              fields: ['name', 'opening_hours', 'types', 'formatted_address', 'website']
+              fields: ['name', 'opening_hours', 'current_opening_hours', 'types', 'formatted_address']
             },
             function (detail, status) {
               if (status === google.maps.places.PlacesServiceStatus.OK && detail) {
@@ -1726,13 +1794,13 @@
           var weekdayIndex = jsDay === 0 ? 6 : jsDay - 1;
 
           gymList.innerHTML =
-            '<div class="gym-count-badge">' + sorted.length + ' venues found within 3 miles</div>' +
+            '<div class="gym-count-badge">' + sorted.length + ' venues found within ' + SEARCH_RADIUS_MILES + ' miles of ' + escapeHtml(label) + '</div>' +
             items.map(function (item) {
               var place = item.place;
               var detail = item.detail;
               var ft = getFitnessType(place.name, (detail && detail.types) || place.types);
 
-              var hours = detail && detail.opening_hours ? detail.opening_hours : null;
+              var hours = detail && (detail.current_opening_hours || detail.opening_hours) ? (detail.current_opening_hours || detail.opening_hours) : null;
               var openNow = (hours && typeof hours.open_now === 'boolean') ? hours.open_now : null;
               var weekdayText = hours && hours.weekday_text ? hours.weekday_text[weekdayIndex] : '';
               var hoursStr = weekdayText ? weekdayText.split(': ').slice(1).join(': ') : '';
@@ -1746,20 +1814,20 @@
                 openBadge = '<span class="gym-closed">● Closed now</span>';
               }
 
-              var mapsUrl = 'https://www.google.com/maps/place/?q=place_id:' + place.place_id;
+              var mapsUrl = 'https://www.google.com/maps/place/?q=place_id:' + encodeURIComponent(place.place_id);
 
               return (
                 '<div class="gym-item">' +
-                  '<div class="gym-icon-wrap">' + ft.emoji + '</div>' +
+                  '<div class="gym-icon-wrap">' + escapeHtml(ft.emoji) + '</div>' +
                   '<div style="flex:1;min-width:0;">' +
-                    '<div class="gym-name">' + place.name + '</div>' +
+                    '<div class="gym-name">' + escapeHtml(place.name) + '</div>' +
                     '<div class="gym-meta">' +
-                      '<span class="gym-type">' + ft.label + '</span>' +
+                      '<span class="gym-type">' + escapeHtml(ft.label) + '</span>' +
                       '<span class="gym-dist">📍 ' + place.dist.toFixed(1) + ' mi away</span>' +
                     '</div>' +
                     '<div class="gym-hours-row">' +
                       openBadge +
-                      (hoursStr ? '<span class="gym-hours-text">· ' + hoursStr + '</span>' : '') +
+                      (hoursStr ? '<span class="gym-hours-text">· ' + escapeHtml(hoursStr) + '</span>' : '') +
                     '</div>' +
                     '<a href="' + mapsUrl + '" target="_blank" rel="noopener" class="gym-maps-btn">🗺 Open in Google Maps</a>' +
                   '</div>' +
@@ -1819,3 +1887,7 @@
   </script>
 </body>
 </html>
+
+
+
+
