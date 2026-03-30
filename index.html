@@ -635,6 +635,121 @@
       display: none;
       margin-top: 14px;
     }
+
+    .facility-recommendation-wrap {
+      display: none;
+      margin-top: 18px;
+    }
+    .facility-recommendation-card {
+      background: linear-gradient(135deg, #fff9f4, #fdf5ed);
+      border: 1px solid #e8cdb0;
+      border-radius: 16px;
+      padding: 18px;
+    }
+    .facility-recommendation-card h3 {
+      font-size: 16px;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .facility-recommendation-card p {
+      font-size: 13px;
+      color: var(--text-mid);
+      line-height: 1.6;
+    }
+    .facility-recommendation-note {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-top: 8px;
+    }
+    .facility-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      margin: 16px 0;
+    }
+    .facility-summary-item {
+      background: rgba(255,255,255,0.72);
+      border: 1px solid #eedacc;
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .facility-summary-item .label {
+      display: block;
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+    }
+    .facility-summary-item .value {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .facility-recommendation-section {
+      margin-top: 18px;
+    }
+    .facility-recommendation-section h4 {
+      font-size: 13px;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .facility-recommendation-section ul {
+      padding-left: 18px;
+      color: var(--text-mid);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .facility-recommendation-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .facility-recommendation-item {
+      display: flex;
+      gap: 12px;
+      padding: 14px;
+      background: rgba(255,255,255,0.8);
+      border: 1px solid #eedacc;
+      border-radius: 14px;
+    }
+    .facility-recommendation-rank {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .facility-recommendation-item h5 {
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .facility-recommendation-item p {
+      font-size: 12px;
+      color: var(--text-mid);
+      margin: 3px 0;
+    }
+    .facility-recommendation-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid #e8cdb0;
+      background: #fff;
+      color: var(--primary-dark);
+      font-size: 11px;
+      font-weight: 700;
+      text-decoration: none;
+    }
     .gym-count-badge {
       font-size: 12px;
       color: var(--text-soft);
@@ -1052,6 +1167,7 @@
 
       <div id="map"></div>
       <div id="gymList" class="gym-list"></div>
+      <div id="facilityRecommendationResult" class="facility-recommendation-wrap"></div>
     </div>
 
     <div id="resultsSection">
@@ -1262,6 +1378,485 @@
       document.getElementById('gymStatus').style.display = 'block';
     }
 
+    function clearFacilityRecommendations(message) {
+      var target = document.getElementById('facilityRecommendationResult');
+      if (!target) return;
+
+      if (!message) {
+        target.style.display = 'none';
+        target.innerHTML = '';
+        return;
+      }
+
+      target.style.display = 'block';
+      target.innerHTML =
+        '<div class="facility-recommendation-card">' +
+          '<h3>Recommended Facilities for Your Plan</h3>' +
+          '<p>' + escapeHtml(message) + '</p>' +
+        '</div>';
+    }
+
+    function mapGoalToRecommendationKey(goalValue) {
+      var map = {
+        '0.8': 'aggressive_fat_loss',
+        '0.866': 'moderate_fat_loss',
+        '0.9': 'lean_maintenance',
+        '1': 'healthy_balance',
+        '1.066': 'lean_bulk',
+        '1.133': 'mass_gain',
+        '1.2': 'performance'
+      };
+      return map[String(goalValue)] || 'healthy_balance';
+    }
+
+    function mapTrainingDaysToWeeklyExercise(trainingValue) {
+      var map = {
+        '1': 1,
+        '1.05': 2,
+        '1.1': 3,
+        '1.2': 4,
+        '1.25': 5,
+        '1.3': 6,
+        '1.35': 7,
+        '1.42': 7
+      };
+      return map[String(trainingValue)] || 0;
+    }
+
+    function mapActivityToRecommendationLevel(activityValue) {
+      var value = Number(activityValue || 0);
+      if (value <= 1.05) return 'low';
+      if (value <= 1.15) return 'moderate';
+      return 'high';
+    }
+
+    function calculateRecommendationBMI(heightCm, weightKg) {
+      var h = Number(heightCm) / 100;
+      var w = Number(weightKg);
+      if (!h || !w) return null;
+      return +(w / (h * h)).toFixed(1);
+    }
+
+    function getExperienceLevel(weeklyExercise, activityLevel) {
+      var weekly = Number(weeklyExercise || 0);
+      var activity = String(activityLevel || '').toLowerCase();
+
+      if (weekly <= 1 && activity === 'low') return 'beginner';
+      if (weekly <= 3) return 'intermediate';
+      return 'advanced';
+    }
+
+    function getImpactLevel(bmi, age, activityLevel) {
+      var score = 0;
+      var a = Number(age || 0);
+      var activity = String(activityLevel || '').toLowerCase();
+
+      if (bmi >= 30) score += 2;
+      else if (bmi >= 25) score += 1;
+
+      if (a >= 50) score += 2;
+      else if (a >= 40) score += 1;
+
+      if (activity === 'low') score += 1;
+
+      if (score >= 4) return 'high';
+      if (score >= 2) return 'medium';
+      return 'low';
+    }
+
+    function getWorkoutProfile(opts) {
+      var profiles = {
+        aggressive_fat_loss: {
+          beginner: ['Walking', 'Cycling', 'Machine-based strength', 'Mobility work'],
+          intermediate: ['Brisk walking', 'Cycling', 'Strength training', 'Light intervals'],
+          advanced: ['Running', 'Strength training', 'Interval training', 'Circuit training']
+        },
+        moderate_fat_loss: {
+          beginner: ['Walking', 'Machine-based strength', 'Mobility work'],
+          intermediate: ['Brisk walking', 'Cycling', 'Strength training'],
+          advanced: ['Jogging', 'Strength training', 'Circuit training']
+        },
+        lean_maintenance: {
+          beginner: ['Walking', 'Stretching', 'Machine-based strength'],
+          intermediate: ['Brisk walking', 'Strength training', 'Mobility work', 'Cycling'],
+          advanced: ['Running', 'Strength training', 'Mobility work', 'Swimming']
+        },
+        healthy_balance: {
+          beginner: ['Walking', 'Machine-based strength', 'Stretching'],
+          intermediate: ['Brisk walking', 'Strength training', 'Cycling', 'Mobility work'],
+          advanced: ['Running', 'Strength training', 'Mobility work', 'Swimming']
+        },
+        lean_bulk: {
+          beginner: ['Machine-based strength', 'Basic resistance training', 'Mobility work'],
+          intermediate: ['Strength training', 'Upper/lower split', 'Light cardio'],
+          advanced: ['Hypertrophy training', 'Compound lifts', 'Light cardio']
+        },
+        mass_gain: {
+          beginner: ['Machine-based strength', 'Basic resistance training'],
+          intermediate: ['Strength training', 'Upper/lower split'],
+          advanced: ['Hypertrophy training', 'Compound lifts', 'Strength training']
+        },
+        performance: {
+          beginner: ['Walking', 'Cycling', 'Machine-based strength'],
+          intermediate: ['Jogging', 'Circuit training', 'Strength training'],
+          advanced: ['Running', 'Interval training', 'Circuit training', 'Compound lifts']
+        }
+      };
+
+      var workoutTypes = (profiles[opts.goal] && profiles[opts.goal][opts.level]) || ['Walking', 'Stretching'];
+
+      if (opts.impactLevel === 'high') {
+        workoutTypes = workoutTypes.filter(function (item) {
+          return ['Running', 'Interval training', 'Light intervals', 'Jogging'].indexOf(item) === -1;
+        });
+        if (workoutTypes.indexOf('Cycling') === -1) workoutTypes.push('Cycling');
+        if (workoutTypes.indexOf('Swimming') === -1) workoutTypes.push('Swimming');
+      }
+
+      if ((opts.goal === 'lean_bulk' || opts.goal === 'mass_gain') && opts.bmi !== null && opts.bmi < 20) {
+        workoutTypes = workoutTypes.filter(function (item) {
+          return ['Running', 'Cycling', 'Interval training', 'Light cardio', 'Light intervals'].indexOf(item) === -1;
+        });
+        if (workoutTypes.indexOf('Strength training') === -1) workoutTypes.push('Strength training');
+      }
+
+      return Array.from(new Set(workoutTypes));
+    }
+
+    function mapFacilityType(place) {
+      var typeBlob = ((place.types || []).concat(place.primaryType || '').join(' ') + ' ' + (place.name || '')).toLowerCase();
+
+      if (typeBlob.includes('gym') || typeBlob.includes('fitness')) return 'gym';
+      if (typeBlob.includes('pilates')) return 'pilates';
+      if (typeBlob.includes('yoga')) return 'yoga';
+      if (typeBlob.includes('swimming') || typeBlob.includes('pool')) return 'swimming';
+      if (typeBlob.includes('park') || typeBlob.includes('trail')) return 'park';
+      if (typeBlob.includes('boxing') || typeBlob.includes('mma') || typeBlob.includes('martial')) return 'combat';
+      if (typeBlob.includes('sports')) return 'sports';
+      return 'other';
+    }
+
+    function getFacilityMatchScore(workoutTypes, facilityType, goal) {
+      var score = 0;
+      var hasStrength = workoutTypes.some(function (x) {
+        return ['Machine-based strength', 'Basic resistance training', 'Strength training', 'Hypertrophy training', 'Compound lifts', 'Upper/lower split'].indexOf(x) !== -1;
+      });
+      var hasWalking = workoutTypes.some(function (x) {
+        return ['Walking', 'Brisk walking', 'Jogging', 'Running'].indexOf(x) !== -1;
+      });
+      var hasMobility = workoutTypes.some(function (x) {
+        return ['Mobility work', 'Stretching'].indexOf(x) !== -1;
+      });
+      var hasSwimming = workoutTypes.indexOf('Swimming') !== -1;
+      var hasCycling = workoutTypes.indexOf('Cycling') !== -1;
+      var hasIntervals = workoutTypes.some(function (x) {
+        return ['Circuit training', 'Interval training', 'Light intervals'].indexOf(x) !== -1;
+      });
+      var hasPilates = workoutTypes.indexOf('Pilates') !== -1;
+      var hasYoga = workoutTypes.indexOf('Yoga') !== -1;
+
+      if (hasStrength && facilityType === 'gym') score += 35;
+      if (hasWalking && facilityType === 'park') score += 30;
+      if (hasCycling && (facilityType === 'gym' || facilityType === 'park')) score += 20;
+      if ((hasMobility || hasYoga) && facilityType === 'yoga') score += 35;
+      if (hasPilates && facilityType === 'pilates') score += 35;
+      if (hasSwimming && facilityType === 'swimming') score += 35;
+      if (hasIntervals && facilityType === 'gym') score += 25;
+
+      if ((goal === 'lean_bulk' || goal === 'mass_gain') && facilityType === 'gym') score += 20;
+      if (goal === 'performance' && ['sports', 'gym', 'park'].indexOf(facilityType) !== -1) score += 20;
+      if (['lean_maintenance', 'healthy_balance'].indexOf(goal) !== -1 && ['yoga', 'pilates', 'swimming', 'park', 'gym'].indexOf(facilityType) !== -1) score += 10;
+
+      return score;
+    }
+
+    function getDistanceScore(distanceMiles) {
+      var d = Number(distanceMiles || 99);
+      if (d <= 0.5) return 25;
+      if (d <= 1) return 22;
+      if (d <= 2) return 18;
+      if (d <= 3) return 12;
+      return 0;
+    }
+
+    function getRatingScore(rating) {
+      if (!rating) return 0;
+      return Math.min(Math.round(Number(rating) * 3), 15);
+    }
+
+    function buildWeeklyPlan(goal, level) {
+      if (goal === 'aggressive_fat_loss') {
+        if (level === 'beginner') {
+          return [
+            'Mon: 30 min brisk walk + 15 min machine strength',
+            'Tue: Mobility or stretching 15–20 min',
+            'Wed: 30 min cycling or walking',
+            'Thu: Light recovery walk',
+            'Fri: 20–30 min full-body gym session',
+            'Sat: 30–40 min walk',
+            'Sun: Rest'
+          ];
+        }
+        return [
+          'Mon: Strength training 45 min',
+          'Tue: Cardio 30–40 min',
+          'Wed: Recovery / mobility',
+          'Thu: Strength training 45 min',
+          'Fri: Intervals or circuit 20–30 min',
+          'Sat: Long walk or cardio 40 min',
+          'Sun: Rest'
+        ];
+      }
+
+      if (goal === 'moderate_fat_loss') {
+        return [
+          'Mon: Brisk walk 30 min',
+          'Tue: Full-body strength 35–45 min',
+          'Wed: Light walk or mobility',
+          'Thu: Cycling or walk 30 min',
+          'Fri: Full-body strength 35–45 min',
+          'Sat: Optional swim or light cardio',
+          'Sun: Rest'
+        ];
+      }
+
+      if (goal === 'lean_maintenance' || goal === 'healthy_balance') {
+        return [
+          'Mon: Strength training 30–40 min',
+          'Tue: Walking 30 min',
+          'Wed: Yoga / mobility 20 min',
+          'Thu: Strength training 30–40 min',
+          'Fri: Light cardio 25–30 min',
+          'Sat: Optional swim / yoga / outdoor walk',
+          'Sun: Rest'
+        ];
+      }
+
+      if (goal === 'lean_bulk') {
+        return [
+          'Mon: Upper body strength',
+          'Tue: Lower body strength',
+          'Wed: Mobility or light cardio',
+          'Thu: Upper body hypertrophy',
+          'Fri: Lower body hypertrophy',
+          'Sat: Light cardio 15–20 min',
+          'Sun: Rest'
+        ];
+      }
+
+      if (goal === 'mass_gain') {
+        return [
+          'Mon: Upper body strength',
+          'Tue: Lower body strength',
+          'Wed: Recovery / mobility',
+          'Thu: Push-pull hypertrophy',
+          'Fri: Legs / posterior chain',
+          'Sat: Optional accessory work',
+          'Sun: Rest'
+        ];
+      }
+
+      if (goal === 'performance') {
+        return [
+          'Mon: Strength + power',
+          'Tue: Conditioning / intervals',
+          'Wed: Recovery / mobility',
+          'Thu: Strength training',
+          'Fri: Athletic circuit or sprint work',
+          'Sat: Sport-specific or endurance session',
+          'Sun: Rest'
+        ];
+      }
+
+      return ['Mon: Walk 30 min', 'Wed: Strength session 30 min', 'Fri: Mobility 20 min'];
+    }
+
+    function buildRecommendationReason(opts) {
+      var labels = {
+        aggressive_fat_loss: 'aggressive fat loss',
+        moderate_fat_loss: 'moderate fat loss',
+        lean_maintenance: 'lean maintenance',
+        healthy_balance: 'healthy balance',
+        lean_bulk: 'lean bulk',
+        mass_gain: 'muscle and mass gain',
+        performance: 'performance improvement'
+      };
+
+      var text = 'Your goal is ' + (labels[opts.goal] || opts.goal) + ', and your current training level is ' + opts.level + '. ';
+
+      if (opts.activityLevel === 'low') {
+        text += 'Because your daily activity level is low, the recommendation prioritizes consistency and realistic progression. ';
+      }
+
+      if (opts.impactLevel === 'high') {
+        text += 'Higher-impact options were reduced to lower joint stress and improve adherence. ';
+      }
+
+      if (opts.goal === 'aggressive_fat_loss' || opts.goal === 'moderate_fat_loss') {
+        text += 'The plan combines calorie-burning activity with strength work to support body composition and routine sustainability.';
+      } else if (opts.goal === 'lean_bulk' || opts.goal === 'mass_gain') {
+        text += 'The plan prioritizes resistance training and limits unnecessary cardio volume.';
+      } else if (opts.goal === 'performance') {
+        text += 'The plan emphasizes strength, conditioning, and athletic development.';
+      } else {
+        text += 'The plan emphasizes balanced movement, strength, and recovery.';
+      }
+
+      return text;
+    }
+
+    function recommendWorkout(user, nearbyFacilities) {
+      var bmi = calculateRecommendationBMI(user.height, user.weight);
+      var level = getExperienceLevel(user.weeklyExercise, user.activityLevel);
+      var impactLevel = getImpactLevel(bmi, user.age, user.activityLevel);
+      var workoutTypes = getWorkoutProfile({
+        goal: user.goal,
+        level: level,
+        impactLevel: impactLevel,
+        bmi: bmi
+      });
+
+      var scoredFacilities = (nearbyFacilities || [])
+        .map(function (place) {
+          var facilityType = mapFacilityType(place);
+          var matchScore = getFacilityMatchScore(workoutTypes, facilityType, user.goal);
+          var distanceScore = getDistanceScore(place.distanceMiles);
+          var ratingScore = getRatingScore(place.rating);
+
+          return Object.assign({}, place, {
+            facilityType: facilityType,
+            score: matchScore + distanceScore + ratingScore
+          });
+        })
+        .sort(function (a, b) {
+          return b.score - a.score;
+        })
+        .slice(0, 5);
+
+      return {
+        summary: {
+          bmi: bmi,
+          level: level,
+          impactLevel: impactLevel,
+          goal: user.goal
+        },
+        recommendedWorkouts: workoutTypes,
+        weeklyPlan: buildWeeklyPlan(user.goal, level),
+        recommendedFacilities: scoredFacilities,
+        reason: buildRecommendationReason({
+          goal: user.goal,
+          level: level,
+          activityLevel: user.activityLevel,
+          impactLevel: impactLevel
+        }),
+        disclaimer: 'This is a general fitness recommendation, not medical advice. Anyone with pain, injury, pregnancy, or a medical condition should consult a qualified professional before starting a new routine.'
+      };
+    }
+
+    function renderFacilityRecommendations(nearbyPlaces) {
+      var target = document.getElementById('facilityRecommendationResult');
+      var form = document.forms['bmrForm'];
+      if (!target || !form) return;
+
+      if (!nearbyPlaces || !nearbyPlaces.length) {
+        clearFacilityRecommendations();
+        return;
+      }
+
+      var age = parseInt(form.elements['age'].value, 10);
+      var heightCm = getHeightCm(form);
+      var weightKg = getWeightKg(form);
+      if (!age || heightCm < 100 || weightKg < 20) {
+        clearFacilityRecommendations('Fill in your age, height, and weight in the calculator above to unlock personalised facility recommendations for the venues shown on this map.');
+        return;
+      }
+
+      var user = {
+        goal: mapGoalToRecommendationKey(form.elements['goal'].value),
+        weeklyExercise: mapTrainingDaysToWeeklyExercise(form.elements['trainingDays'].value),
+        activityLevel: mapActivityToRecommendationLevel(form.elements['activity'].value),
+        height: heightCm,
+        weight: weightKg,
+        age: age,
+        sex: String(form.elements['gender'].value || '').toLowerCase()
+      };
+
+      var facilities = nearbyPlaces.map(function (place) {
+        return {
+          name: place.name,
+          primaryType: place.primaryType || '',
+          types: place.types || [],
+          type: place.primaryType || (place.types || []).join(' '),
+          distanceMiles: place.dist,
+          rating: place.rating || null,
+          googleMapsUri: place.googleMapsUri || '',
+          formattedAddress: place.formattedAddress || ''
+        };
+      });
+
+      var result = recommendWorkout(user, facilities);
+      target.style.display = 'block';
+      target.innerHTML = renderFacilityRecommendationHtml(result);
+    }
+
+    function formatRecommendationGoal(goal) {
+      var labels = {
+        aggressive_fat_loss: 'Aggressive fat loss',
+        moderate_fat_loss: 'Moderate fat loss',
+        lean_maintenance: 'Lean maintenance',
+        healthy_balance: 'Healthy balance',
+        lean_bulk: 'Muscle building (lean bulk)',
+        mass_gain: 'Muscle & mass gain',
+        performance: 'Performance / athletic'
+      };
+      return labels[goal] || goal;
+    }
+
+    function renderFacilityRecommendationHtml(result) {
+      var workoutsHtml = result.recommendedWorkouts.map(function (item) {
+        return '<li>' + escapeHtml(item) + '</li>';
+      }).join('');
+
+      var weeklyHtml = result.weeklyPlan.map(function (item) {
+        return '<li>' + escapeHtml(item) + '</li>';
+      }).join('');
+
+      var facilitiesHtml = result.recommendedFacilities.length
+        ? '<div class="facility-recommendation-list">' + result.recommendedFacilities.map(function (place, index) {
+            var mapsUrl = place.googleMapsUri || ('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(place.name + ' ' + (place.formattedAddress || '')));
+            return (
+              '<div class="facility-recommendation-item">' +
+                '<div class="facility-recommendation-rank">#' + (index + 1) + '</div>' +
+                '<div>' +
+                  '<h5>' + escapeHtml(place.name) + '</h5>' +
+                  '<p><strong>Type:</strong> ' + escapeHtml(place.facilityType) + '</p>' +
+                  '<p><strong>Distance:</strong> ' + escapeHtml(place.distanceMiles.toFixed(1)) + ' miles</p>' +
+                  '<p><strong>Rating:</strong> ' + (place.rating ? escapeHtml(String(place.rating)) : 'N/A') + '</p>' +
+                  '<a class="facility-recommendation-link" href="' + mapsUrl + '" target="_blank" rel="noopener">🗺 Open in Google Maps</a>' +
+                '</div>' +
+              '</div>'
+            );
+          }).join('') + '</div>'
+        : '<p>No nearby facilities matched your current training plan.</p>';
+
+      return (
+        '<div class="facility-recommendation-card">' +
+          '<h3>Recommended Facilities for Your Plan</h3>' +
+          '<p>' + escapeHtml(result.reason) + '</p>' +
+          '<div class="facility-summary-grid">' +
+            '<div class="facility-summary-item"><span class="label">Goal</span><span class="value">' + escapeHtml(formatRecommendationGoal(result.summary.goal)) + '</span></div>' +
+            '<div class="facility-summary-item"><span class="label">Level</span><span class="value">' + escapeHtml(result.summary.level) + '</span></div>' +
+            '<div class="facility-summary-item"><span class="label">BMI</span><span class="value">' + (result.summary.bmi === null ? 'N/A' : escapeHtml(String(result.summary.bmi))) + '</span></div>' +
+            '<div class="facility-summary-item"><span class="label">Impact</span><span class="value">' + escapeHtml(result.summary.impactLevel) + '</span></div>' +
+          '</div>' +
+          '<div class="facility-recommendation-section"><h4>Recommended workout types</h4><ul>' + workoutsHtml + '</ul></div>' +
+          '<div class="facility-recommendation-section"><h4>Suggested weekly routine</h4><ul>' + weeklyHtml + '</ul></div>' +
+          '<div class="facility-recommendation-section"><h4>Best nearby facilities</h4>' + facilitiesHtml + '</div>' +
+          '<p class="facility-recommendation-note">' + escapeHtml(result.disclaimer) + '</p>' +
+        '</div>'
+      );
+    }
+
     function calculateAndShow() {
       const form = document.forms['bmrForm'];
       const gender = form.elements['gender'].value;
@@ -1296,6 +1891,7 @@
       renderFoodRecs(goal);
 
       document.getElementById('resultsSection').style.display = 'block';
+      renderFacilityRecommendations(_lastGymResults);
 
       setTimeout(() => {
         document.getElementById('resultsSection').scrollIntoView({
@@ -1331,6 +1927,7 @@
     var _activeGymSearchToken = 0;
     var _fitnessSectionReady = false;
     var _manualSearchActive = false;
+    var _lastGymResults = [];
 
     function calcMiles(lat1, lng1, lat2, lng2) {
       var R = 3958.8;
@@ -1396,7 +1993,8 @@
         primaryType: place.primaryType || '',
         currentOpeningHours: place.currentOpeningHours || null,
         regularOpeningHours: place.regularOpeningHours || null,
-        googleMapsUri: place.googleMapsUri || ''
+        googleMapsUri: place.googleMapsUri || '',
+        rating: typeof place.rating === 'number' ? place.rating : null
       };
     }
 
@@ -1428,7 +2026,8 @@
         'places.primaryType',
         'places.currentOpeningHours',
         'places.regularOpeningHours',
-        'places.googleMapsUri'
+        'places.googleMapsUri',
+        'places.rating'
       ].join(',');
 
       Promise.all(FITNESS_TEXT_QUERIES.map(function (query) {
@@ -1796,6 +2395,8 @@
         if (searchToken !== _activeGymSearchToken) return;
 
         if (error) {
+          _lastGymResults = [];
+          clearFacilityRecommendations('We could not build personalised facility recommendations because nearby venue search is temporarily unavailable.');
           gymList.innerHTML = '<p style="color:var(--text-soft);font-size:13px;text-align:center;padding:20px;">Unable to load fitness venues right now. Please try again shortly.</p>';
           setGymStatus('Venue search unavailable', error.message || 'Places API (New) request failed.');
           return;
@@ -1816,6 +2417,8 @@
           .slice(0, 12);
 
         if (!sorted.length) {
+          _lastGymResults = [];
+          clearFacilityRecommendations('No nearby venues were found in this area, so there is nothing to recommend yet.');
           gymList.innerHTML = '<p style="color:var(--text-soft);font-size:13px;text-align:center;padding:20px;">No fitness venues found within ' + SEARCH_RADIUS_MILES + ' miles. Try searching a different area.</p>';
           setGymStatus('No venues found', 'No fitness venues were returned within ' + SEARCH_RADIUS_MILES + ' miles of ' + label + '.');
           return;
@@ -1863,7 +2466,9 @@
           _gymMap.fitBounds(bounds, 60);
         }
 
+        _lastGymResults = sorted;
         renderGymList(sorted);
+        renderFacilityRecommendations(sorted);
 
         function renderGymList(items) {
           var now = new Date();
