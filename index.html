@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Calibrate — Precision Nutrition for Women</title>
-  <meta name="google-adsense-account" content="ca-pub-9247222675222330">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta name="google-adsense-account" content="ca-pub-9247222675222330" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9247222675222330" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -28,154 +30,688 @@
       --shadow:         0 2px 24px rgba(184,144,106,0.08);
     }
 
-    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
 
     .hero {
       background: linear-gradient(160deg, #fffdf9 0%, #fdf5ed 60%, #faf8f5 100%);
-      padding: 64px 20px 52px; text-align: center;
-      position: relative; overflow: hidden; border-bottom: 1px solid var(--border);
+      padding: 64px 20px 52px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
     }
     .hero::before {
-      content: ''; position: absolute; top: -10%; left: 50%; transform: translateX(-50%);
-      width: 600px; height: 400px;
+      content: '';
+      position: absolute;
+      top: -10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
       background: radial-gradient(ellipse, rgba(184,144,106,0.08) 0%, transparent 65%);
       pointer-events: none;
     }
-    .brand-lockup { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 28px; }
-    .brand-mark { width: 30px; height: 30px; border: 1.5px solid var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
-    .brand-name { font-size: 13px; font-weight: 700; letter-spacing: 3.5px; text-transform: uppercase; color: var(--primary); }
-    .brand-sub  { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-soft); margin-top: 1px; }
-    .hero h1 { font-size: clamp(26px,5vw,46px); font-weight: 800; line-height: 1.18; color: var(--text); margin-bottom: 14px; letter-spacing: -0.5px; }
-    .hero h1 em { font-style: normal; color: var(--primary); }
-    .hero-sub { color: var(--text-soft); font-size: 15px; max-width: 400px; margin: 0 auto 32px; line-height: 1.7; }
-    .hero-pills { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-    .pill { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-mid); padding: 6px 16px; border-radius: 100px; font-size: 12px; font-weight: 500; }
 
-    .main { max-width: 620px; margin: 0 auto; padding: 32px 16px 80px; }
-
-    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 16px; box-shadow: var(--shadow); }
-    .card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
-    .card-icon { width: 44px; height: 44px; background: var(--primary-bg); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-    .card-title { font-size: 16px; font-weight: 700; color: var(--text); }
-    .card-subtitle { font-size: 12px; color: var(--text-soft); margin-top: 2px; }
-
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-    .form-row.single { grid-template-columns: 1fr; }
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    .form-group label { font-size: 11px; font-weight: 600; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.8px; }
-    .form-group input, .form-group select {
-      background: var(--bg-input); border: 1px solid var(--border); border-radius: 10px;
-      padding: 11px 14px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px;
-      transition: border-color 0.2s, box-shadow 0.2s; outline: none; width: 100%; -webkit-appearance: none;
+    .brand-lockup {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 28px;
     }
-    .form-group input:focus, .form-group select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(184,144,106,0.1); background: #fff; }
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      border: 1.5px solid var(--primary);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .brand-name {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+      color: var(--primary);
+    }
+    .brand-sub  {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-top: 1px;
+    }
+    .hero h1 {
+      font-size: clamp(26px,5vw,46px);
+      font-weight: 800;
+      line-height: 1.18;
+      color: var(--text);
+      margin-bottom: 14px;
+      letter-spacing: -0.5px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--primary);
+    }
+    .hero-sub {
+      color: var(--text-soft);
+      font-size: 15px;
+      max-width: 400px;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+    .hero-pills {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .pill {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-mid);
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .main {
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 32px 16px 80px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--primary-bg);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .card-subtitle {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-top: 2px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .form-row.single { grid-template-columns: 1fr; }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-group label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .form-group input,
+    .form-group select {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 14px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      width: 100%;
+      -webkit-appearance: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(184,144,106,0.1);
+      background: #fff;
+    }
     .form-group input::placeholder { color: var(--border); }
 
-    .gender-toggle { display: flex; background: var(--bg-input); border-radius: 10px; padding: 4px; border: 1px solid var(--border); gap: 4px; }
+    .gender-toggle {
+      display: flex;
+      background: var(--bg-input);
+      border-radius: 10px;
+      padding: 4px;
+      border: 1px solid var(--border);
+      gap: 4px;
+    }
     .gender-toggle input[type="radio"] { display: none; }
-    .gender-toggle label { flex: 1; text-align: center; padding: 9px 12px; border-radius: 7px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--text-soft); transition: all 0.2s; }
-    .gender-toggle input:checked + label { background: var(--primary); color: #fff; font-weight: 700; }
+    .gender-toggle label {
+      flex: 1;
+      text-align: center;
+      padding: 9px 12px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-soft);
+      transition: all 0.2s;
+    }
+    .gender-toggle input:checked + label {
+      background: var(--primary);
+      color: #fff;
+      font-weight: 700;
+    }
 
-    .unit-toggle-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-    .unit-toggle-row > label { font-size: 11px; font-weight: 600; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.8px; }
-    .unit-switch { display: flex; background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; padding: 3px; gap: 3px; }
-    .unit-switch button { padding: 5px 12px; border: none; border-radius: 5px; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.18s; background: transparent; color: var(--text-soft); }
-    .unit-switch button.active { background: var(--primary); color: #fff; }
+    .unit-toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .unit-toggle-row > label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .unit-switch {
+      display: flex;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 3px;
+      gap: 3px;
+    }
+    .unit-switch button {
+      padding: 5px 12px;
+      border: none;
+      border-radius: 5px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+      background: transparent;
+      color: var(--text-soft);
+    }
+    .unit-switch button.active {
+      background: var(--primary);
+      color: #fff;
+    }
+
     .unit-inputs { display: none; }
     .unit-inputs.visible { display: grid; }
-    .unit-inputs.two-col { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .unit-inputs.two-col {
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
 
-    .form-divider { height: 1px; background: var(--border-light); margin: 18px 0; }
+    .form-divider {
+      height: 1px;
+      background: var(--border-light);
+      margin: 18px 0;
+    }
 
-    .email-section { background: var(--primary-bg); border: 1px solid #e8cdb0; border-radius: 12px; padding: 18px; margin: 16px 0; }
-    .email-section-label { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
-    .email-note { font-size: 11px; color: var(--text-soft); margin-top: 8px; line-height: 1.6; }
+    .email-section {
+      background: var(--primary-bg);
+      border: 1px solid #e8cdb0;
+      border-radius: 12px;
+      padding: 18px;
+      margin: 16px 0;
+    }
+    .email-section-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    .email-note {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-top: 8px;
+      line-height: 1.6;
+    }
 
-    .btn-primary { width: 100%; padding: 15px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; border: none; border-radius: 100px; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; letter-spacing: 0.3px; }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(184,144,106,0.3); }
+    .btn-primary {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      border: none;
+      border-radius: 100px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      letter-spacing: 0.3px;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(184,144,106,0.3);
+    }
     .btn-primary:active { transform: translateY(0); }
-    .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+    .btn-primary:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
 
-    #resultsSection { display: none; animation: fadeUp 0.45s ease; }
-    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+    #resultsSection {
+      display: none;
+      animation: fadeUp 0.45s ease;
+    }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(16px); }
+      to { opacity:1; transform:translateY(0); }
+    }
 
-    .tdee-display { text-align: center; padding: 32px 20px 24px; background: linear-gradient(135deg, var(--primary-bg), #fff9f4); border: 1px solid #e8cdb0; border-radius: 16px; margin-bottom: 14px; }
-    .tdee-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-soft); margin-bottom: 6px; }
-    .tdee-value { font-size: clamp(48px,10vw,64px); font-weight: 800; color: var(--primary); line-height: 1; letter-spacing: -2px; }
-    .tdee-unit { font-size: 15px; color: var(--text-soft); margin-top: 4px; }
-    .goal-tag { display: inline-block; background: var(--primary-bg); color: var(--primary); padding: 5px 16px; border-radius: 100px; font-size: 12px; font-weight: 600; margin-top: 14px; border: 1px solid #e8cdb0; }
+    .tdee-display {
+      text-align: center;
+      padding: 32px 20px 24px;
+      background: linear-gradient(135deg, var(--primary-bg), #fff9f4);
+      border: 1px solid #e8cdb0;
+      border-radius: 16px;
+      margin-bottom: 14px;
+    }
+    .tdee-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-soft);
+      margin-bottom: 6px;
+    }
+    .tdee-value {
+      font-size: clamp(48px,10vw,64px);
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+      letter-spacing: -2px;
+    }
+    .tdee-unit {
+      font-size: 15px;
+      color: var(--text-soft);
+      margin-top: 4px;
+    }
+    .goal-tag {
+      display: inline-block;
+      background: var(--primary-bg);
+      color: var(--primary);
+      padding: 5px 16px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 14px;
+      border: 1px solid #e8cdb0;
+    }
 
-    .macro-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
-    .macro-card { background: var(--bg-input); border: 1px solid var(--border); border-radius: 14px; padding: 16px 10px; text-align: center; }
-    .macro-icon { font-size: 22px; margin-bottom: 7px; }
-    .macro-label { font-size: 10px; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-    .macro-value { font-size: 20px; font-weight: 800; }
-    .macro-unit { font-size: 11px; color: var(--text-soft); }
+    .macro-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 10px;
+    }
+    .macro-card {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 10px;
+      text-align: center;
+    }
+    .macro-icon {
+      font-size: 22px;
+      margin-bottom: 7px;
+    }
+    .macro-label {
+      font-size: 10px;
+      color: var(--text-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .macro-value {
+      font-size: 20px;
+      font-weight: 800;
+    }
+    .macro-unit {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
     .macro-card.protein .macro-value { color: #c0716a; }
-    .macro-card.fat     .macro-value { color: var(--primary); }
-    .macro-card.carbs   .macro-value { color: #7aaa8a; }
+    .macro-card.fat .macro-value { color: var(--primary); }
+    .macro-card.carbs .macro-value { color: #7aaa8a; }
 
     .macro-bar-wrap { margin: 16px 0 4px; }
-    .macro-bar-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-soft); margin-bottom: 6px; }
-    .macro-bar { height: 6px; background: var(--bg-input); border-radius: 100px; overflow: hidden; }
-    .macro-bar-fill { height: 100%; background: linear-gradient(90deg, #c0716a 0%, #c0716a 30%, #b8906a 30%, #b8906a 55%, #7aaa8a 55%, #7aaa8a 100%); border-radius: 100px; }
+    .macro-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 6px;
+    }
+    .macro-bar {
+      height: 6px;
+      background: var(--bg-input);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+    .macro-bar-fill {
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        #c0716a 0%,
+        #c0716a 30%,
+        #b8906a 30%,
+        #b8906a 55%,
+        #7aaa8a 55%,
+        #7aaa8a 100%
+      );
+      border-radius: 100px;
+    }
 
-    .email-banner { display: none; background: #f0faf4; border: 1px solid #b3dfc3; border-radius: 12px; padding: 14px 18px; align-items: center; gap: 12px; margin-bottom: 14px; }
-    .email-banner .check-circle { width: 32px; height: 32px; background: #52b788; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 15px; flex-shrink: 0; }
-    .email-banner strong { display: block; font-size: 13px; color: var(--text); margin-bottom: 2px; }
-    .email-banner p { font-size: 12px; color: var(--text-soft); }
+    .email-banner {
+      display: none;
+      background: #f0faf4;
+      border: 1px solid #b3dfc3;
+      border-radius: 12px;
+      padding: 14px 18px;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .email-banner .check-circle {
+      width: 32px;
+      height: 32px;
+      background: #52b788;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .email-banner strong {
+      display: block;
+      font-size: 13px;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+    .email-banner p {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
 
-    .food-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .food-cat { background: var(--bg-input); border-radius: 12px; padding: 14px; }
-    .food-cat h4 { font-size: 12px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+    .food-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .food-cat {
+      background: var(--bg-input);
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .food-cat h4 {
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
     .food-cat ul { list-style: none; }
-    .food-cat ul li { font-size: 12px; color: var(--text-soft); padding: 2px 0; }
-    .food-cat ul li::before { content: '·'; color: var(--primary); font-weight: 700; margin-right: 5px; }
+    .food-cat ul li {
+      font-size: 12px;
+      color: var(--text-soft);
+      padding: 2px 0;
+    }
+    .food-cat ul li::before {
+      content: '·';
+      color: var(--primary);
+      font-weight: 700;
+      margin-right: 5px;
+    }
 
-    /* ── GYM SECTION ── */
-    .gym-search-row { display: flex; gap: 8px; margin-bottom: 14px; }
-    .gym-search-row input { flex: 1; background: var(--bg-input); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; font-family: 'Inter', sans-serif; font-size: 13px; color: var(--text); outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
-    .gym-search-row input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(184,144,106,0.1); background: #fff; }
+    .gym-search-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .gym-search-row input {
+      flex: 1;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .gym-search-row input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(184,144,106,0.1);
+      background: #fff;
+    }
     .gym-search-row input::placeholder { color: var(--text-soft); }
-    .btn-gym-search { padding: 10px 16px; background: var(--primary); color: #fff; border: none; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
+
+    .btn-gym-search {
+      padding: 10px 16px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
     .btn-gym-search:hover { background: var(--primary-dark); }
 
-    #map { width: 100%; height: 280px; border-radius: 12px; display: none; margin-bottom: 4px; }
+    #map {
+      width: 100%;
+      height: 280px;
+      border-radius: 12px;
+      display: none;
+      margin-bottom: 4px;
+    }
 
-    .gym-placeholder { background: var(--bg-input); border-radius: 12px; padding: 28px 20px; text-align: center; color: var(--text-soft); font-size: 14px; line-height: 1.9; }
-    .btn-location { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; padding: 10px 22px; background: var(--primary-bg); border: 1px solid #e8cdb0; color: var(--primary); border-radius: 100px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .gym-placeholder {
+      background: var(--bg-input);
+      border-radius: 12px;
+      padding: 28px 20px;
+      text-align: center;
+      color: var(--text-soft);
+      font-size: 14px;
+      line-height: 1.9;
+    }
+    .btn-location {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 14px;
+      padding: 10px 22px;
+      background: var(--primary-bg);
+      border: 1px solid #e8cdb0;
+      color: var(--primary);
+      border-radius: 100px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
     .btn-location:hover { background: #f7e6d4; }
 
-    .location-banner { background: var(--primary-bg); border: 1px solid #e8cdb0; border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-    .location-banner .loc-icon { font-size: 22px; flex-shrink: 0; }
-    .location-banner p { font-size: 13px; color: var(--text-mid); }
-    .location-banner strong { display: block; font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+    .location-banner {
+      background: var(--primary-bg);
+      border: 1px solid #e8cdb0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .location-banner .loc-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .location-banner p {
+      font-size: 13px;
+      color: var(--text-mid);
+    }
+    .location-banner strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
 
-    .gym-list { display: none; margin-top: 14px; }
-    .gym-count-badge { font-size: 12px; color: var(--text-soft); margin-bottom: 10px; padding: 0 2px; }
-    .gym-item { display: flex; align-items: flex-start; gap: 14px; padding: 16px; margin-bottom: 10px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 14px; transition: border-color 0.2s; }
+    .gym-list {
+      display: none;
+      margin-top: 14px;
+    }
+    .gym-count-badge {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-bottom: 10px;
+      padding: 0 2px;
+    }
+    .gym-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px;
+      margin-bottom: 10px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      transition: border-color 0.2s;
+    }
     .gym-item:hover { border-color: var(--primary-light); }
-    .gym-icon-wrap { width: 42px; height: 42px; background: var(--primary-bg); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-    .gym-name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; line-height: 1.3; }
-    .gym-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 5px; }
-    .gym-type { font-size: 11px; background: var(--primary-bg); color: var(--primary); padding: 3px 10px; border-radius: 100px; font-weight: 600; border: 1px solid #e8cdb0; }
-    .gym-dist { font-size: 12px; color: var(--text-mid); font-weight: 600; }
-    .gym-hours-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
+    .gym-icon-wrap {
+      width: 42px;
+      height: 42px;
+      background: var(--primary-bg);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .gym-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    .gym-meta {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 5px;
+    }
+    .gym-type {
+      font-size: 11px;
+      background: var(--primary-bg);
+      color: var(--primary);
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-weight: 600;
+      border: 1px solid #e8cdb0;
+    }
+    .gym-dist {
+      font-size: 12px;
+      color: var(--text-mid);
+      font-weight: 600;
+    }
+    .gym-hours-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
     .gym-open   { font-size: 12px; color: #52b788; font-weight: 600; }
     .gym-closed { font-size: 12px; color: #c0716a; font-weight: 600; }
     .gym-hours-text { font-size: 12px; color: var(--text-soft); }
     .gym-hours-na   { font-size: 12px; color: var(--text-soft); }
-    .gym-maps-btn { display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; padding: 5px 12px; background: #fff; border: 1px solid var(--border); border-radius: 100px; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; color: var(--text-mid); text-decoration: none; transition: all 0.2s; }
-    .gym-maps-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .gym-maps-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 6px;
+      padding: 5px 12px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-mid);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .gym-maps-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
 
-    /* user location blue pulsing dot */
     .user-dot-outer {
       position: absolute;
       transform: translate(-50%, -50%);
       pointer-events: none;
     }
     .user-dot-inner {
-      width: 16px; height: 16px;
+      width: 16px;
+      height: 16px;
       background: #4285F4;
       border: 3px solid #fff;
       border-radius: 50%;
@@ -188,21 +724,87 @@
       100% { box-shadow: 0 0 0 0 rgba(66,133,244,0); }
     }
 
-    .product-cta { background: linear-gradient(135deg, #fff9f4, #fdf5ed); border: 1px solid #e8cdb0; border-radius: var(--radius); padding: 32px 24px; text-align: center; }
-    .product-cta .cta-icon { font-size: 38px; margin-bottom: 12px; }
-    .product-cta h3 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-    .product-cta p { color: var(--text-soft); font-size: 13px; margin-bottom: 22px; line-height: 1.7; }
-    .btn-shop { display: inline-block; padding: 13px 30px; background: var(--primary); color: #fff; border: none; border-radius: 100px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; text-decoration: none; transition: all 0.2s; }
-    .btn-shop:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184,144,106,0.3); }
+    .product-cta {
+      background: linear-gradient(135deg, #fff9f4, #fdf5ed);
+      border: 1px solid #e8cdb0;
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      text-align: center;
+    }
+    .product-cta .cta-icon {
+      font-size: 38px;
+      margin-bottom: 12px;
+    }
+    .product-cta h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .product-cta p {
+      color: var(--text-soft);
+      font-size: 13px;
+      margin-bottom: 22px;
+      line-height: 1.7;
+    }
+    .btn-shop {
+      display: inline-block;
+      padding: 13px 30px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 100px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-shop:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(184,144,106,0.3);
+    }
 
-    .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.65s linear infinite; }
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.65s linear infinite;
+    }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--text); color: #fff; padding: 11px 22px; border-radius: 100px; font-size: 13px; font-weight: 500; transition: transform 0.3s ease; z-index: 999; white-space: nowrap; }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--text);
+      color: #fff;
+      padding: 11px 22px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      transition: transform 0.3s ease;
+      z-index: 999;
+      white-space: nowrap;
+    }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
-    .footer { text-align: center; padding: 0 16px 48px; color: var(--text-soft); font-size: 11px; letter-spacing: 0.3px; }
-    .footer a { color: var(--primary); text-decoration: none; }
+    .footer {
+      text-align: center;
+      padding: 0 16px 48px;
+      color: var(--text-soft);
+      font-size: 11px;
+      letter-spacing: 0.3px;
+    }
+    .footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
 
     @media (max-width: 480px) {
       .card { padding: 20px 14px; }
@@ -213,787 +815,1007 @@
   </style>
 </head>
 <body>
-
-<div class="hero">
-  <div class="brand-lockup">
-    <div class="brand-mark">
-      <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-        <circle cx="8" cy="8" r="6.5" stroke="#b8906a" stroke-width="1.3"/>
-        <path d="M8 8 L11 5" stroke="#b8906a" stroke-width="1.4" stroke-linecap="round"/>
-        <circle cx="8" cy="8" r="1.2" fill="#b8906a"/>
-      </svg>
-    </div>
-    <div>
-      <div class="brand-name">Calibrate</div>
-      <div class="brand-sub">Precision Nutrition</div>
-    </div>
-  </div>
-  <h1>Your body,<br><em>precisely understood.</em></h1>
-  <p class="hero-sub">Get a personalised nutrition plan built around your body, lifestyle and goals — in under a minute.</p>
-  <div class="hero-pills">
-    <span class="pill">✦ Science-backed</span>
-    <span class="pill">✦ Built for busy women</span>
-    <span class="pill">✦ Free</span>
-  </div>
-</div>
-
-<div class="main">
-  <div class="card">
-    <div class="card-header">
-      <div class="card-icon">📐</div>
+  <div class="hero">
+    <div class="brand-lockup">
+      <div class="brand-mark">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="6.5" stroke="#b8906a" stroke-width="1.3"/>
+          <path d="M8 8 L11 5" stroke="#b8906a" stroke-width="1.4" stroke-linecap="round"/>
+          <circle cx="8" cy="8" r="1.2" fill="#b8906a"/>
+        </svg>
+      </div>
       <div>
-        <div class="card-title">Body Composition Calculator</div>
-        <div class="card-subtitle">The more accurate your input, the more precise your plan</div>
+        <div class="brand-name">Calibrate</div>
+        <div class="brand-sub">Precision Nutrition</div>
       </div>
     </div>
-    <form id="bmrForm" onsubmit="return false;">
-      <div class="form-group" style="margin-bottom:14px;">
-        <label>Biological Sex</label>
-        <div class="gender-toggle">
-          <input type="radio" name="gender" id="male" value="Male" checked>
-          <label for="male">Male</label>
-          <input type="radio" name="gender" id="female" value="Female">
-          <label for="female">Female</label>
-        </div>
-      </div>
-      <div class="form-row single" style="margin-bottom:12px;">
-        <div class="form-group">
-          <label>Age</label>
-          <input type="number" name="age" placeholder="e.g. 32" min="16" max="100">
-        </div>
-      </div>
-      <div style="margin-bottom:12px;">
-        <div class="unit-toggle-row">
-          <label>Height</label>
-          <div class="unit-switch" id="heightUnitSwitch">
-            <button class="active" onclick="setUnit('height','imperial')">ft / in</button>
-            <button onclick="setUnit('height','metric')">cm</button>
-          </div>
-        </div>
-        <div class="unit-inputs two-col visible" id="heightImperial">
-          <div class="form-group"><label>Feet</label><input type="number" name="height_ft" placeholder="e.g. 5" min="4" max="7"></div>
-          <div class="form-group"><label>Inches</label><input type="number" name="height_in" placeholder="e.g. 6" min="0" max="11"></div>
-        </div>
-        <div class="unit-inputs two-col" id="heightMetric">
-          <div class="form-group" style="grid-column:1/-1;"><label>Centimetres</label><input type="number" name="height_cm" placeholder="e.g. 168" min="140" max="220"></div>
-        </div>
-      </div>
-      <div style="margin-bottom:14px;">
-        <div class="unit-toggle-row">
-          <label>Weight</label>
-          <div class="unit-switch" id="weightUnitSwitch">
-            <button class="active" onclick="setUnit('weight','imperial')">st / lbs</button>
-            <button onclick="setUnit('weight','metric')">kg</button>
-          </div>
-        </div>
-        <div class="unit-inputs two-col visible" id="weightImperial">
-          <div class="form-group"><label>Stone</label><input type="number" name="weight_st" placeholder="e.g. 10" min="5" max="40"></div>
-          <div class="form-group"><label>Pounds</label><input type="number" name="weight_lbs" placeholder="e.g. 4" min="0" max="13"></div>
-        </div>
-        <div class="unit-inputs two-col" id="weightMetric">
-          <div class="form-group" style="grid-column:1/-1;"><label>Kilograms</label><input type="number" name="weight_kg" placeholder="e.g. 65" min="35" max="250"></div>
-        </div>
-      </div>
-      <div class="form-divider"></div>
-      <div class="form-group" style="margin-bottom:12px;">
-        <label>Daily Activity Level</label>
-        <select name="activity">
-          <option value="1">Sedentary — under 4,000 steps</option>
-          <option value="1.05">Lightly active — 4,000–6,000 steps</option>
-          <option value="1.1" selected>Moderately active — 6,000–10,000 steps</option>
-          <option value="1.125">Active — 10,000–15,000 steps</option>
-          <option value="1.15">Very active — 15,000+ steps</option>
-          <option value="1.35">High intensity training (amateur)</option>
-          <option value="1.4">Semi-professional athlete</option>
-        </select>
-      </div>
-      <div class="form-group" style="margin-bottom:12px;">
-        <label>Your Goal</label>
-        <select name="goal">
-          <option value="0.8">Aggressive fat loss</option>
-          <option value="0.866">Moderate fat loss</option>
-          <option value="0.9">Lean maintenance</option>
-          <option value="1" selected>Healthy balance</option>
-          <option value="1.066">Muscle building (lean bulk)</option>
-          <option value="1.133">Muscle &amp; mass gain</option>
-          <option value="1.2">Performance / athletic</option>
-        </select>
-      </div>
-      <div class="form-group" style="margin-bottom:18px;">
-        <label>Training Sessions per Week</label>
-        <select name="trainingDays">
-          <option value="1">1 session / week</option>
-          <option value="1.05">2 sessions / week</option>
-          <option value="1.1" selected>3 sessions / week</option>
-          <option value="1.2">4 sessions / week</option>
-          <option value="1.25">5 sessions / week</option>
-          <option value="1.3">6 sessions / week</option>
-          <option value="1.35">7 sessions / week</option>
-          <option value="1.42">7+ sessions / week</option>
-        </select>
-      </div>
-      <div class="email-section">
-        <div class="email-section-label">✉ Receive your plan by email (optional)</div>
-        <div class="form-group">
-          <input type="email" name="email" placeholder="your@email.com">
-        </div>
-        <p class="email-note">We'll send your full plan, nearby fitness venues &amp; curated product picks — no spam, ever.</p>
-      </div>
-      <button type="button" class="btn-primary" id="calcBtn" onclick="calculateAndShow()">
-        <span id="btnText">Calculate My Plan →</span>
-      </button>
-    </form>
+
+    <h1>Your body,<br><em>precisely understood.</em></h1>
+    <p class="hero-sub">Get a personalised nutrition plan built around your body, lifestyle and goals — in under a minute.</p>
+
+    <div class="hero-pills">
+      <span class="pill">✦ Science-backed</span>
+      <span class="pill">✦ Built for busy women</span>
+      <span class="pill">✦ Free</span>
+    </div>
   </div>
 
-  <div style="margin-bottom:16px;">
-    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9247222675222330" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
-    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-  </div>
-
-  <div id="resultsSection">
-    <div class="email-banner" id="emailBanner">
-      <div class="check-circle">✓</div>
-      <div>
-        <strong>Plan sent to your inbox ✦</strong>
-        <p id="emailBannerText">Check your email for your personalised nutrition plan</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="tdee-display">
-        <div class="tdee-label">Daily Calorie Target (TDEE)</div>
-        <div class="tdee-value" id="tdeeValue">—</div>
-        <div class="tdee-unit">kcal / day</div>
-        <div class="goal-tag" id="goalTag">Healthy balance</div>
-      </div>
-      <div class="macro-grid">
-        <div class="macro-card protein"><div class="macro-icon">🥩</div><div class="macro-label">Protein</div><div class="macro-value" id="proteinValue">—</div><div class="macro-unit">g / day</div></div>
-        <div class="macro-card fat"><div class="macro-icon">🥑</div><div class="macro-label">Fats</div><div class="macro-value" id="fatValue">—</div><div class="macro-unit">g / day</div></div>
-        <div class="macro-card carbs"><div class="macro-icon">🌾</div><div class="macro-label">Carbs</div><div class="macro-value" id="carbsValue">—</div><div class="macro-unit">g / day</div></div>
-      </div>
-      <div class="macro-bar-wrap">
-        <div class="macro-bar-label"><span>Protein 30%</span><span>Fats 25%</span><span>Carbs 45%</span></div>
-        <div class="macro-bar"><div class="macro-bar-fill" style="width:100%"></div></div>
-      </div>
-    </div>
-
+  <div class="main">
     <div class="card">
       <div class="card-header">
-        <div class="card-icon">🥗</div>
-        <div><div class="card-title">Nutrition Recommendations</div><div class="card-subtitle">Foods aligned with your goal</div></div>
-      </div>
-      <div class="food-grid" id="foodGrid"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🏋️</div>
+        <div class="card-icon">📐</div>
         <div>
-          <div class="card-title">Fitness Venues Near You</div>
-          <div class="card-subtitle">Gyms, F45, CrossFit, Pilates and more · within 3 miles</div>
+          <div class="card-title">Body Composition Calculator</div>
+          <div class="card-subtitle">The more accurate your input, the more precise your plan</div>
         </div>
       </div>
 
-      <div class="location-banner" id="locationBanner">
-        <div class="loc-icon">📍</div>
+      <form id="bmrForm" onsubmit="return false;">
+        <div class="form-group" style="margin-bottom:14px;">
+          <label>Biological Sex</label>
+          <div class="gender-toggle">
+            <input type="radio" name="gender" id="male" value="Male" checked />
+            <label for="male">Male</label>
+            <input type="radio" name="gender" id="female" value="Female" />
+            <label for="female">Female</label>
+          </div>
+        </div>
+
+        <div class="form-row single" style="margin-bottom:12px;">
+          <div class="form-group">
+            <label>Age</label>
+            <input type="number" name="age" placeholder="e.g. 32" min="16" max="100" />
+          </div>
+        </div>
+
+        <div style="margin-bottom:12px;">
+          <div class="unit-toggle-row">
+            <label>Height</label>
+            <div class="unit-switch" id="heightUnitSwitch">
+              <button type="button" class="active" onclick="setUnit('height','imperial')">ft / in</button>
+              <button type="button" onclick="setUnit('height','metric')">cm</button>
+            </div>
+          </div>
+
+          <div class="unit-inputs two-col visible" id="heightImperial">
+            <div class="form-group">
+              <label>Feet</label>
+              <input type="number" name="height_ft" placeholder="e.g. 5" min="4" max="7" />
+            </div>
+            <div class="form-group">
+              <label>Inches</label>
+              <input type="number" name="height_in" placeholder="e.g. 6" min="0" max="11" />
+            </div>
+          </div>
+
+          <div class="unit-inputs two-col" id="heightMetric">
+            <div class="form-group" style="grid-column:1/-1;">
+              <label>Centimetres</label>
+              <input type="number" name="height_cm" placeholder="e.g. 168" min="140" max="220" />
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:14px;">
+          <div class="unit-toggle-row">
+            <label>Weight</label>
+            <div class="unit-switch" id="weightUnitSwitch">
+              <button type="button" class="active" onclick="setUnit('weight','imperial')">st / lbs</button>
+              <button type="button" onclick="setUnit('weight','metric')">kg</button>
+            </div>
+          </div>
+
+          <div class="unit-inputs two-col visible" id="weightImperial">
+            <div class="form-group">
+              <label>Stone</label>
+              <input type="number" name="weight_st" placeholder="e.g. 10" min="5" max="40" />
+            </div>
+            <div class="form-group">
+              <label>Pounds</label>
+              <input type="number" name="weight_lbs" placeholder="e.g. 4" min="0" max="13" />
+            </div>
+          </div>
+
+          <div class="unit-inputs two-col" id="weightMetric">
+            <div class="form-group" style="grid-column:1/-1;">
+              <label>Kilograms</label>
+              <input type="number" name="weight_kg" placeholder="e.g. 65" min="35" max="250" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-divider"></div>
+
+        <div class="form-group" style="margin-bottom:12px;">
+          <label>Daily Activity Level</label>
+          <select name="activity">
+            <option value="1">Sedentary — under 4,000 steps</option>
+            <option value="1.05">Lightly active — 4,000–6,000 steps</option>
+            <option value="1.1" selected>Moderately active — 6,000–10,000 steps</option>
+            <option value="1.125">Active — 10,000–15,000 steps</option>
+            <option value="1.15">Very active — 15,000+ steps</option>
+            <option value="1.35">High intensity training (amateur)</option>
+            <option value="1.4">Semi-professional athlete</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom:12px;">
+          <label>Your Goal</label>
+          <select name="goal">
+            <option value="0.8">Aggressive fat loss</option>
+            <option value="0.866">Moderate fat loss</option>
+            <option value="0.9">Lean maintenance</option>
+            <option value="1" selected>Healthy balance</option>
+            <option value="1.066">Muscle building (lean bulk)</option>
+            <option value="1.133">Muscle &amp; mass gain</option>
+            <option value="1.2">Performance / athletic</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom:18px;">
+          <label>Training Sessions per Week</label>
+          <select name="trainingDays">
+            <option value="1">1 session / week</option>
+            <option value="1.05">2 sessions / week</option>
+            <option value="1.1" selected>3 sessions / week</option>
+            <option value="1.2">4 sessions / week</option>
+            <option value="1.25">5 sessions / week</option>
+            <option value="1.3">6 sessions / week</option>
+            <option value="1.35">7 sessions / week</option>
+            <option value="1.42">7+ sessions / week</option>
+          </select>
+        </div>
+
+        <div class="email-section">
+          <div class="email-section-label">✉ Receive your plan by email (optional)</div>
+          <div class="form-group">
+            <input type="email" name="email" placeholder="your@email.com" />
+          </div>
+          <p class="email-note">We'll send your full plan, nearby fitness venues &amp; curated product picks — no spam, ever.</p>
+        </div>
+
+        <button type="button" class="btn-primary" id="calcBtn" onclick="calculateAndShow()">
+          <span id="btnText">Calculate My Plan →</span>
+        </button>
+      </form>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-9247222675222330"
+           data-ad-slot="auto"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+
+    <div id="resultsSection">
+      <div class="email-banner" id="emailBanner">
+        <div class="check-circle">✓</div>
         <div>
-          <strong id="locationBannerTitle">Finding fitness venues near you…</strong>
-          <p id="locationBannerMsg">Allow location access in the browser prompt to see nearby gyms</p>
+          <strong>Plan sent to your inbox ✦</strong>
+          <p id="emailBannerText">Check your email for your personalised nutrition plan</p>
         </div>
       </div>
 
-      <div class="gym-search-row">
-        <input type="text" id="gymSearchInput" placeholder="Search any location (e.g. Whitechapel, London)"
-               onkeydown="if(event.key==='Enter'){event.preventDefault();searchLocation();}" />
-        <button class="btn-gym-search" onclick="searchLocation()">🔍 Search</button>
+      <div class="card">
+        <div class="tdee-display">
+          <div class="tdee-label">Daily Calorie Target (TDEE)</div>
+          <div class="tdee-value" id="tdeeValue">—</div>
+          <div class="tdee-unit">kcal / day</div>
+          <div class="goal-tag" id="goalTag">Healthy balance</div>
+        </div>
+
+        <div class="macro-grid">
+          <div class="macro-card protein">
+            <div class="macro-icon">🥩</div>
+            <div class="macro-label">Protein</div>
+            <div class="macro-value" id="proteinValue">—</div>
+            <div class="macro-unit">g / day</div>
+          </div>
+          <div class="macro-card fat">
+            <div class="macro-icon">🥑</div>
+            <div class="macro-label">Fats</div>
+            <div class="macro-value" id="fatValue">—</div>
+            <div class="macro-unit">g / day</div>
+          </div>
+          <div class="macro-card carbs">
+            <div class="macro-icon">🌾</div>
+            <div class="macro-label">Carbs</div>
+            <div class="macro-value" id="carbsValue">—</div>
+            <div class="macro-unit">g / day</div>
+          </div>
+        </div>
+
+        <div class="macro-bar-wrap">
+          <div class="macro-bar-label">
+            <span>Protein 30%</span>
+            <span>Fats 25%</span>
+            <span>Carbs 45%</span>
+          </div>
+          <div class="macro-bar">
+            <div class="macro-bar-fill" style="width:100%"></div>
+          </div>
+        </div>
       </div>
 
-      <div id="gymPlaceholder" class="gym-placeholder" style="display:none;">
-        <p>📍 Allow location access or search a city above to find fitness venues within 3 miles</p>
-        <button class="btn-location" onclick="requestLocation()">📍 Try Again</button>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">🥗</div>
+          <div>
+            <div class="card-title">Nutrition Recommendations</div>
+            <div class="card-subtitle">Foods aligned with your goal</div>
+          </div>
+        </div>
+        <div class="food-grid" id="foodGrid"></div>
       </div>
 
-      <div id="map"></div>
-      <div id="gymList" class="gym-list"></div>
-    </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">🏋️</div>
+          <div>
+            <div class="card-title">Fitness Venues Near You</div>
+            <div class="card-subtitle">Gyms, F45, CrossFit, Pilates and more · within 3 miles</div>
+          </div>
+        </div>
 
-    <div class="product-cta">
-      <div class="cta-icon">✨</div>
-      <h3>Products curated for your goal</h3>
-      <p>Our team has handpicked supplements and nutrition products that align with your specific targets — so you spend less time researching and more time progressing.</p>
-      <a href="#" class="btn-shop">Browse Recommendations →</a>
+        <div class="location-banner" id="locationBanner">
+          <div class="loc-icon">📍</div>
+          <div>
+            <strong id="locationBannerTitle">Finding fitness venues near you...</strong>
+            <p id="locationBannerMsg">Allow location access in the browser prompt to see nearby gyms</p>
+          </div>
+        </div>
+
+        <div class="gym-search-row">
+          <input
+            type="text"
+            id="gymSearchInput"
+            placeholder="Search any location (e.g. Whitechapel, London)"
+            onkeydown="if(event.key==='Enter'){event.preventDefault();searchLocation();}"
+          />
+          <button type="button" class="btn-gym-search" onclick="searchLocation()">🔍 Search</button>
+        </div>
+
+        <div id="gymPlaceholder" class="gym-placeholder" style="display:none;">
+          <p>📍 Allow location access or search a city above to find fitness venues within 3 miles</p>
+          <button type="button" class="btn-location" onclick="requestLocation()">📍 Try Again</button>
+        </div>
+
+        <div id="map"></div>
+        <div id="gymList" class="gym-list"></div>
+      </div>
+
+      <div class="product-cta">
+        <div class="cta-icon">✨</div>
+        <h3>Products curated for your goal</h3>
+        <p>Our team has handpicked supplements and nutrition products that align with your specific targets — so you spend less time researching and more time progressing.</p>
+        <a href="#" class="btn-shop">Browse Recommendations →</a>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="footer">© 2026 Calibrate &nbsp;·&nbsp; Precision Nutrition &nbsp;·&nbsp; <a href="#">Privacy</a></div>
-<div class="toast" id="toast"></div>
+  <div class="footer">
+    © 2026 Calibrate &nbsp;·&nbsp; Precision Nutrition &nbsp;·&nbsp; <a href="#">Privacy</a>
+  </div>
 
-<script>
-/* ─────────────────────────────────────────────────────────────
-   CONFIG
-───────────────────────────────────────────────────────────── */
-const CONFIG = {
-  emailjs_public_key : 'tc-AW0DXRU_Qd8oyw',
-  emailjs_service_id : 'service_offb76e',
-  emailjs_template_id: 'template_86uskse',
-  google_maps_key    : 'AIzaSyDDWQAQS6USWoeyXQsD_QUlqrAdUABEwEI',
-};
+  <div class="toast" id="toast"></div>
 
-const GOAL_LABELS = {
-  '0.8'  : 'Aggressive Fat Loss',
-  '0.866': 'Moderate Fat Loss',
-  '0.9'  : 'Lean Maintenance',
-  '1'    : 'Healthy Balance',
-  '1.066': 'Lean Muscle Build',
-  '1.133': 'Muscle & Mass Gain',
-  '1.2'  : 'Performance Mode',
-};
+  <script>
+    const CONFIG = {
+      emailjs_public_key : 'tc-AW0DXRU_Qd8oyw',
+      emailjs_service_id : 'service_offb76e',
+      emailjs_template_id: 'template_86uskse',
+      google_maps_key    : 'AIzaSyDDWQAQS6USWoeyXQsD_QUlqrAdUABEwEI',
+    };
 
-const FOOD_DB = {
-  diet: {
-    '🥩 Protein Sources':['Chicken breast','Egg whites','Greek yoghurt','Tofu','White fish'],
-    '🌾 Carbohydrates':['Brown rice','Sweet potato','Oats','Broccoli','Mushrooms'],
-    '🥑 Healthy Fats':['½ avocado','Olive oil','Small handful of nuts'],
-    '🚫 Limit':['Added sugar','Fried foods','White bread','Fizzy drinks'],
-  },
-  maintain: {
-    '🥩 Protein Sources':['Chicken breast','Salmon','Eggs','Tofu','Legumes'],
-    '🌾 Carbohydrates':['Brown rice','Sweet potato','Quinoa','Oats','Banana'],
-    '🥑 Healthy Fats':['Avocado','Salmon','Olive oil','Mixed nuts'],
-    '🍽️ Meal Ideas':['Greek yoghurt + berries','Brown rice + grilled chicken','Salad + protein'],
-  },
-  bulk: {
-    '🥩 Protein Sources':['Lean beef','Chicken breast','Salmon','Eggs','Whey protein'],
-    '🌾 Carbohydrates':['White rice','Pasta','Banana','Sweet potato','Oats'],
-    '🥑 Healthy Fats':['Avocado','Mixed nuts','Olive oil','Natural cheese'],
-    '🍽️ Meal Ideas':['Rice + steak','Pasta + chicken','Protein shake + banana'],
-  },
-};
+    const GOAL_LABELS = {
+      '0.8'   : 'Aggressive Fat Loss',
+      '0.866' : 'Moderate Fat Loss',
+      '0.9'   : 'Lean Maintenance',
+      '1'     : 'Healthy Balance',
+      '1.066' : 'Lean Muscle Build',
+      '1.133' : 'Muscle & Mass Gain',
+      '1.2'   : 'Performance Mode',
+    };
 
-function getFoodRecs(g) {
-  const v = parseFloat(g);
-  if (v < 0.95) return FOOD_DB.diet;
-  if (v <= 1.0)  return FOOD_DB.maintain;
-  return FOOD_DB.bulk;
-}
+    const FOOD_DB = {
+      diet: {
+        '🥩 Protein Sources': ['Chicken breast', 'Egg whites', 'Greek yoghurt', 'Tofu', 'White fish'],
+        '🌾 Carbohydrates': ['Brown rice', 'Sweet potato', 'Oats', 'Broccoli', 'Mushrooms'],
+        '🥑 Healthy Fats': ['1⁄2 avocado', 'Olive oil', 'Small handful of nuts'],
+        '🚫 Limit': ['Added sugar', 'Fried foods', 'White bread', 'Fizzy drinks'],
+      },
+      maintain: {
+        '🥩 Protein Sources': ['Chicken breast', 'Salmon', 'Eggs', 'Tofu', 'Legumes'],
+        '🌾 Carbohydrates': ['Brown rice', 'Sweet potato', 'Quinoa', 'Oats', 'Banana'],
+        '🥑 Healthy Fats': ['Avocado', 'Salmon', 'Olive oil', 'Mixed nuts'],
+        '🍽️ Meal Ideas': ['Greek yoghurt + berries', 'Brown rice + grilled chicken', 'Salad + protein'],
+      },
+      bulk: {
+        '🥩 Protein Sources': ['Lean beef', 'Chicken breast', 'Salmon', 'Eggs', 'Whey protein'],
+        '🌾 Carbohydrates': ['White rice', 'Pasta', 'Banana', 'Sweet potato', 'Oats'],
+        '🥑 Healthy Fats': ['Avocado', 'Mixed nuts', 'Olive oil', 'Natural cheese'],
+        '🍽️ Meal Ideas': ['Rice + steak', 'Pasta + chicken', 'Protein shake + banana'],
+      },
+    };
 
-function renderFoodRecs(goal) {
-  document.getElementById('foodGrid').innerHTML = Object.entries(getFoodRecs(goal)).map(([cat, items]) => `
-    <div class="food-cat">
-      <h4>${cat}</h4>
-      <ul>${items.map(i => `<li>${i}</li>`).join('')}</ul>
-    </div>`).join('');
-}
-
-/* ─────────────────────────────────────────────────────────────
-   UNIT TOGGLES
-───────────────────────────────────────────────────────────── */
-const unitState = { height: 'imperial', weight: 'imperial' };
-function setUnit(field, mode) {
-  unitState[field] = mode;
-  const sw = document.getElementById(field + 'UnitSwitch');
-  sw.querySelectorAll('button').forEach((b, i) => {
-    b.classList.toggle('active', (i===0 && mode==='imperial') || (i===1 && mode==='metric'));
-  });
-  document.getElementById(field+'Imperial').classList.toggle('visible', mode==='imperial');
-  document.getElementById(field+'Metric').classList.toggle('visible', mode==='metric');
-}
-function getHeightCm(form) {
-  if (unitState.height==='metric') return parseFloat(form.elements['height_cm'].value)||0;
-  return (parseFloat(form.elements['height_ft'].value)||0)*30.48 + (parseFloat(form.elements['height_in'].value)||0)*2.54;
-}
-function getWeightKg(form) {
-  if (unitState.weight==='metric') return parseFloat(form.elements['weight_kg'].value)||0;
-  return (parseFloat(form.elements['weight_st'].value)||0)*6.35029 + (parseFloat(form.elements['weight_lbs'].value)||0)*0.453592;
-}
-function fmtHeight(form) {
-  if (unitState.height==='metric') return `${Math.round(getHeightCm(form))} cm`;
-  return `${form.elements['height_ft'].value||'—'}ft ${form.elements['height_in'].value||'0'}in`;
-}
-function fmtWeight(form) {
-  if (unitState.weight==='metric') return `${Math.round(getWeightKg(form))} kg`;
-  return `${form.elements['weight_st'].value||'—'} st ${form.elements['weight_lbs'].value||'0'} lbs`;
-}
-
-/* ─────────────────────────────────────────────────────────────
-   CALCULATE
-───────────────────────────────────────────────────────────── */
-function calculateAndShow() {
-  const form         = document.forms['bmrForm'];
-  const gender       = form.elements['gender'].value;
-  const age          = parseInt(form.elements['age'].value);
-  const heightCm     = getHeightCm(form);
-  const weightKg     = getWeightKg(form);
-  const activityMult = parseFloat(form.elements['activity'].value);
-  const goal         = form.elements['goal'].value;
-  const trainingMult = parseFloat(form.elements['trainingDays'].value);
-  const email        = form.elements['email'].value.trim();
-
-  if (!age || heightCm < 100 || weightKg < 20) {
-    showToast('⚠️ Please fill in your age, height and weight');
-    return;
-  }
-
-  const bmr = gender === 'Male'
-    ? 88.362 + (13.397*weightKg) + (4.799*heightCm) - (5.677*age)
-    : 447.593 + (9.247*weightKg) + (3.098*heightCm) - (4.330*age);
-
-  const tdee     = bmr * parseFloat(goal) * activityMult * trainingMult;
-  const proteinG = (tdee * 0.30) / 4;
-  const fatG     = (tdee * 0.25) / 9;
-  const carbG    = (tdee - proteinG*4 - fatG*9) / 4;
-
-  document.getElementById('tdeeValue').textContent    = Math.round(tdee).toLocaleString('en-GB');
-  document.getElementById('proteinValue').textContent = Math.round(proteinG);
-  document.getElementById('fatValue').textContent     = Math.round(fatG);
-  document.getElementById('carbsValue').textContent   = Math.round(carbG);
-  document.getElementById('goalTag').textContent      = GOAL_LABELS[goal] || 'Healthy Balance';
-
-  renderFoodRecs(goal);
-  document.getElementById('resultsSection').style.display = 'block';
-  setTimeout(() => document.getElementById('resultsSection').scrollIntoView({ behavior:'smooth', block:'start' }), 60);
-
-  _bootstrapMaps();
-  autoDetectLocation();
-
-  if (email) sendEmail(email, { tdee, proteinG, fatG, carbG, goal, gender, age,
-    heightDisplay: fmtHeight(form), weightDisplay: fmtWeight(form) });
-}
-
-/* ─────────────────────────────────────────────────────────────
-   GYM / MAP — state
-───────────────────────────────────────────────────────────── */
-var _gymMap      = null;
-var _gymService  = null;
-var _gymMarkers  = [];
-var _userOverlay = null;
-var _userMarker  = null;
-var _userLat     = null;
-var _userLng     = null;
-
-/* Haversine — returns miles */
-function calcMiles(lat1, lng1, lat2, lng2) {
-  var R    = 3958.8;
-  var dLat = (lat2-lat1)*Math.PI/180;
-  var dLng = (lng2-lng1)*Math.PI/180;
-  var a    = Math.sin(dLat/2)*Math.sin(dLat/2) +
-             Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*
-             Math.sin(dLng/2)*Math.sin(dLng/2);
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-}
-
-function getFitnessType(name, types) {
-  var n = (name || '').toLowerCase();
-  if (n.indexOf('f45')      !== -1) return { emoji:'⚡', label:'F45 Training' };
-  if (n.indexOf('crossfit') !== -1) return { emoji:'🔥', label:'CrossFit' };
-  if (n.indexOf('pilates')  !== -1) return { emoji:'🤸', label:'Pilates' };
-  if (n.indexOf('yoga')     !== -1) return { emoji:'🧘', label:'Yoga' };
-  if (n.indexOf('spin')     !== -1 || n.indexOf('cycle') !== -1 || n.indexOf('cycling') !== -1)
-                                    return { emoji:'🚴', label:'Cycling' };
-  if (n.indexOf('boxing')   !== -1 || n.indexOf('muay') !== -1 || n.indexOf('kickbox') !== -1)
-                                    return { emoji:'🥊', label:'Boxing' };
-  if (n.indexOf('swim')     !== -1) return { emoji:'🏊', label:'Swimming' };
-  if (n.indexOf('hiit')     !== -1 || n.indexOf('barry') !== -1)
-                                    return { emoji:'🔥', label:'HIIT' };
-  if (n.indexOf('barre')    !== -1) return { emoji:'🩰', label:'Barre' };
-  if (n.indexOf('climb')    !== -1) return { emoji:'🧗', label:'Climbing' };
-  if (n.indexOf('dance')    !== -1 || n.indexOf('zumba') !== -1)
-                                    return { emoji:'💃', label:'Dance Fitness' };
-  if ((types||[]).indexOf('gym') !== -1) return { emoji:'🏋️', label:'Gym' };
-  return { emoji:'🏃', label:'Fitness Studio' };
-}
-
-/* ─────────────────────────────────────────────────────────────
-   MAPS BOOTSTRAP
-───────────────────────────────────────────────────────────── */
-function _bootstrapMaps() {
-  if (window._gymMapsLoading || window._gymMapsLoaded || window._gymMapsError) return;
-  window._gymMapsLoading = true;
-  var s = document.createElement('script');
-  s.src = 'https://maps.googleapis.com/maps/api/js?key=' + CONFIG.google_maps_key + '&libraries=places&callback=initMap';
-  s.async = true;
-  s.onerror = function () {
-    window._gymMapsLoading = false;
-    window._gymMapsError   = true;
-    showToast('❌ Maps failed to load — check your connection and try refreshing');
-    document.getElementById('gymPlaceholder').style.display  = 'block';
-    document.getElementById('locationBanner').style.display  = 'none';
-    document.getElementById('gymPlaceholder').querySelector('p').textContent =
-      '⚠️ Google Maps could not be loaded. Please check your connection and refresh the page.';
-  };
-  document.head.appendChild(s);
-}
-
-/* ─────────────────────────────────────────────────────────────
-   initMap — callback from Maps API
-───────────────────────────────────────────────────────────── */
-window.initMap = function () {
-  window._gymMapsLoaded  = true;
-  window._gymMapsLoading = false;
-
-  /* Pulsing blue dot OverlayView */
-  function PulsingDot(latLng) {
-    this._latLng = latLng;
-    this._div    = null;
-  }
-  PulsingDot.prototype = Object.create(google.maps.OverlayView.prototype);
-  PulsingDot.prototype.onAdd = function () {
-    var d = document.createElement('div');
-    d.className = 'user-dot-outer';
-    d.innerHTML = '<div class="user-dot-inner"></div>';
-    this._div = d;
-    this.getPanes().overlayMouseTarget.appendChild(d);
-  };
-  PulsingDot.prototype.draw = function () {
-    if (!this._div) return;
-    var pt = this.getProjection().fromLatLngToDivPixel(this._latLng);
-    this._div.style.left = pt.x + 'px';
-    this._div.style.top  = pt.y + 'px';
-  };
-  PulsingDot.prototype.onRemove = function () {
-    if (this._div && this._div.parentNode) {
-      this._div.parentNode.removeChild(this._div);
-      this._div = null;
+    function getFoodRecs(goalValue) {
+      const v = parseFloat(goalValue);
+      if (v < 0.95) return FOOD_DB.diet;
+      if (v <= 1.0) return FOOD_DB.maintain;
+      return FOOD_DB.bulk;
     }
-  };
-  window._PulsingDot = PulsingDot;
 
-  var mapEl = document.getElementById('map');
-  mapEl.style.display = 'block';
-
-  _gymMap = new google.maps.Map(mapEl, {
-    center: { lat: 51.505, lng: -0.09 }, zoom: 14,
-    styles: [
-      { elementType:'geometry',           stylers:[{color:'#f5f0eb'}] },
-      { elementType:'labels.text.fill',   stylers:[{color:'#6b5c54'}] },
-      { elementType:'labels.text.stroke', stylers:[{color:'#fdf5ed'}] },
-      { featureType:'road', elementType:'geometry',        stylers:[{color:'#ecddd4'}] },
-      { featureType:'road', elementType:'labels.text.fill',stylers:[{color:'#9b8e87'}] },
-      { featureType:'water',elementType:'geometry',        stylers:[{color:'#d4e8f0'}] },
-      { featureType:'poi',  elementType:'geometry',        stylers:[{color:'#f0e8e0'}] },
-    ],
-  });
-  _gymService = new google.maps.places.PlacesService(_gymMap);
-
-  /* Flush any pending action queued before Maps loaded */
-  if (window._pendingSearch) {
-    var q = window._pendingSearch; window._pendingSearch = null;
-    _geocodeAndSearch(q);
-  } else if (window._pendingLat != null) {
-    var lat = window._pendingLat, lng = window._pendingLng;
-    window._pendingLat = window._pendingLng = null;
-    doSearchAt(lat, lng, 'My Location', true);
-  } else {
-    mapEl.style.display = 'none';
-  }
-};
-
-/* ─────────────────────────────────────────────────────────────
-   LOCATION
-───────────────────────────────────────────────────────────── */
-function autoDetectLocation() {
-  if (!navigator.geolocation) {
-    document.getElementById('locationBanner').style.display = 'none';
-    document.getElementById('gymPlaceholder').style.display = 'block';
-    return;
-  }
-  navigator.geolocation.getCurrentPosition(
-    function (pos) {
-      _userLat = pos.coords.latitude;
-      _userLng = pos.coords.longitude;
-      document.getElementById('locationBanner').style.display = 'none';
-      if (window._gymMapsLoaded) {
-        doSearchAt(_userLat, _userLng, 'My Location', true);
-      } else {
-        window._pendingLat = _userLat;
-        window._pendingLng = _userLng;
-      }
-    },
-    function () {
-      document.getElementById('locationBanner').style.display = 'none';
-      document.getElementById('gymPlaceholder').style.display = 'block';
-      showToast('📍 Location denied — search a city instead');
-    },
-    { timeout: 8000 }
-  );
-}
-
-function requestLocation() {
-  if (!navigator.geolocation) { showToast('Geolocation not supported'); return; }
-  showToast('📡 Finding your location…');
-  navigator.geolocation.getCurrentPosition(
-    function (pos) {
-      _userLat = pos.coords.latitude;
-      _userLng = pos.coords.longitude;
-      document.getElementById('gymPlaceholder').style.display  = 'none';
-      document.getElementById('locationBanner').style.display  = 'none';
-      if (window._gymMapsLoaded) {
-        doSearchAt(_userLat, _userLng, 'My Location', true);
-      } else {
-        _bootstrapMaps();
-        window._pendingLat = _userLat;
-        window._pendingLng = _userLng;
-      }
-    },
-    function () { showToast('⚠️ Location access denied'); }
-  );
-}
-
-function searchLocation() {
-  var input = document.getElementById('gymSearchInput').value.trim();
-  if (!input) { showToast('⚠️ Enter a location to search'); return; }
-
-  /* Handle Maps load error */
-  if (window._gymMapsError) {
-    showToast('❌ Maps failed to load — please refresh the page');
-    return;
-  }
-
-  document.getElementById('locationBanner').style.display = 'none';
-  document.getElementById('gymPlaceholder').style.display = 'none';
-
-  /* Ensure Maps is loading (in case calculateAndShow wasn't called) */
-  _bootstrapMaps();
-
-  if (!window._gymMapsLoaded) {
-    window._pendingSearch = input;
-    showToast('⏳ Map is loading, please wait…');
-    return;
-  }
-
-  _geocodeAndSearch(input);
-}
-
-function _geocodeAndSearch(address) {
-  showToast('🔍 Searching for "' + address + '"…');
-  var geocoder = new google.maps.Geocoder();
-  geocoder.geocode({ address: address }, function (results, status) {
-    if (status === 'OK' && results[0]) {
-      var loc = results[0].geometry.location;
-      doSearchAt(loc.lat(), loc.lng(), results[0].formatted_address, false);
-    } else {
-      showToast('⚠️ Location not found — try a more specific address (e.g. "Shoreditch, London")');
+    function renderFoodRecs(goal) {
+      document.getElementById('foodGrid').innerHTML = Object.entries(getFoodRecs(goal))
+        .map(([cat, items]) => `
+          <div class="food-cat">
+            <h4>${cat}</h4>
+            <ul>${items.map(i => `<li>${i}</li>`).join('')}</ul>
+          </div>
+        `)
+        .join('');
     }
-  });
-}
 
-/* ─────────────────────────────────────────────────────────────
-   MULTI-TYPE FITNESS SEARCH (8 parallel queries)
-───────────────────────────────────────────────────────────── */
-var FITNESS_QUERIES = [
-  { type: 'gym' },
-  { keyword: 'crossfit' },
-  { keyword: 'f45 training' },
-  { keyword: 'pilates studio' },
-  { keyword: 'yoga studio' },
-  { keyword: 'boxing gym' },
-  { keyword: 'spin cycling class' },
-  { keyword: 'barre fitness' },
-];
+    const unitState = {
+      height: 'imperial',
+      weight: 'imperial'
+    };
 
-function searchAllFitnessVenues(lat, lng, onDone) {
-  var seen    = {};
-  var results = [];
-  var pending = FITNESS_QUERIES.length;
+    function setUnit(field, mode) {
+      unitState[field] = mode;
+      const sw = document.getElementById(field + 'UnitSwitch');
 
-  FITNESS_QUERIES.forEach(function (params) {
-    var req = { location: { lat: lat, lng: lng }, radius: 4828 };
-    if (params.type)    req.type    = params.type;
-    if (params.keyword) req.keyword = params.keyword;
+      sw.querySelectorAll('button').forEach((b, i) => {
+        b.classList.toggle(
+          'active',
+          (i === 0 && mode === 'imperial') || (i === 1 && mode === 'metric')
+        );
+      });
 
-    _gymService.nearbySearch(req, function (res, status) {
-      if (status === google.maps.places.PlacesServiceStatus.OK && res) {
-        res.forEach(function (r) {
-          if (!seen[r.place_id]) { seen[r.place_id] = true; results.push(r); }
+      document.getElementById(field + 'Imperial').classList.toggle('visible', mode === 'imperial');
+      document.getElementById(field + 'Metric').classList.toggle('visible', mode === 'metric');
+    }
+
+    function getHeightCm(form) {
+      if (unitState.height === 'metric') {
+        return parseFloat(form.elements['height_cm'].value) || 0;
+      }
+      return (parseFloat(form.elements['height_ft'].value) || 0) * 30.48 +
+             (parseFloat(form.elements['height_in'].value) || 0) * 2.54;
+    }
+
+    function getWeightKg(form) {
+      if (unitState.weight === 'metric') {
+        return parseFloat(form.elements['weight_kg'].value) || 0;
+      }
+      return (parseFloat(form.elements['weight_st'].value) || 0) * 6.35029 +
+             (parseFloat(form.elements['weight_lbs'].value) || 0) * 0.453592;
+    }
+
+    function fmtHeight(form) {
+      if (unitState.height === 'metric') return `${Math.round(getHeightCm(form))} cm`;
+      return `${form.elements['height_ft'].value || '—'}ft ${form.elements['height_in'].value || '0'}in`;
+    }
+
+    function fmtWeight(form) {
+      if (unitState.weight === 'metric') return `${Math.round(getWeightKg(form))} kg`;
+      return `${form.elements['weight_st'].value || '—'} st ${form.elements['weight_lbs'].value || '0'} lbs`;
+    }
+
+    function calculateAndShow() {
+      const form = document.forms['bmrForm'];
+      const gender = form.elements['gender'].value;
+      const age = parseInt(form.elements['age'].value, 10);
+      const heightCm = getHeightCm(form);
+      const weightKg = getWeightKg(form);
+      const activityMult = parseFloat(form.elements['activity'].value);
+      const goal = form.elements['goal'].value;
+      const trainingMult = parseFloat(form.elements['trainingDays'].value);
+      const email = form.elements['email'].value.trim();
+
+      if (!age || heightCm < 100 || weightKg < 20) {
+        showToast('⚠️ Please fill in your age, height and weight');
+        return;
+      }
+
+      const bmr = gender === 'Male'
+        ? 88.362 + (13.397 * weightKg) + (4.799 * heightCm) - (5.677 * age)
+        : 447.593 + (9.247 * weightKg) + (3.098 * heightCm) - (4.330 * age);
+
+      const tdee = bmr * parseFloat(goal) * activityMult * trainingMult;
+      const proteinG = (tdee * 0.30) / 4;
+      const fatG = (tdee * 0.25) / 9;
+      const carbG = (tdee - proteinG * 4 - fatG * 9) / 4;
+
+      document.getElementById('tdeeValue').textContent = Math.round(tdee).toLocaleString('en-GB');
+      document.getElementById('proteinValue').textContent = Math.round(proteinG);
+      document.getElementById('fatValue').textContent = Math.round(fatG);
+      document.getElementById('carbsValue').textContent = Math.round(carbG);
+      document.getElementById('goalTag').textContent = GOAL_LABELS[goal] || 'Healthy Balance';
+
+      renderFoodRecs(goal);
+
+      document.getElementById('resultsSection').style.display = 'block';
+
+      setTimeout(() => {
+        document.getElementById('resultsSection').scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }, 60);
+
+      _bootstrapMaps();
+      autoDetectLocation();
+
+      if (email) {
+        sendEmail(email, {
+          tdee,
+          proteinG,
+          fatG,
+          carbG,
+          goal,
+          gender,
+          age,
+          heightDisplay: fmtHeight(form),
+          weightDisplay: fmtWeight(form)
         });
       }
-      if (--pending === 0) onDone(results);
-    });
-  });
-}
-
-/* ─────────────────────────────────────────────────────────────
-   PULSING USER DOT
-───────────────────────────────────────────────────────────── */
-function placeUserDot(lat, lng) {
-  if (_userOverlay) { _userOverlay.setMap(null); _userOverlay = null; }
-  if (_userMarker)  { _userMarker.setMap(null);  _userMarker  = null; }
-
-  if (window._PulsingDot) {
-    _userOverlay = new window._PulsingDot(new google.maps.LatLng(lat, lng));
-    _userOverlay.setMap(_gymMap);
-  } else {
-    _userMarker = new google.maps.Marker({
-      map: _gymMap, position: { lat: lat, lng: lng }, zIndex: 999,
-      title: 'Your Location',
-      icon: { path: google.maps.SymbolPath.CIRCLE, scale: 9,
-              fillColor:'#4285F4', fillOpacity:1, strokeColor:'#fff', strokeWeight:3 }
-    });
-  }
-}
-
-/* ─────────────────────────────────────────────────────────────
-   MAIN SEARCH + RENDER
-───────────────────────────────────────────────────────────── */
-function doSearchAt(lat, lng, label, isUserLocation) {
-  var mapEl   = document.getElementById('map');
-  var gymList = document.getElementById('gymList');
-
-  document.getElementById('gymPlaceholder').style.display = 'none';
-  document.getElementById('locationBanner').style.display = 'none';
-  mapEl.style.display   = 'block';
-  gymList.style.display = 'block';
-  gymList.innerHTML = '<p style="color:var(--text-soft);font-size:13px;text-align:center;padding:20px;">🔍 Searching for fitness venues nearby…</p>';
-
-  _gymMarkers.forEach(function (m) { m.setMap(null); });
-  _gymMarkers = [];
-
-  _gymMap.setCenter({ lat: lat, lng: lng });
-  _gymMap.setZoom(14);
-  google.maps.event.trigger(_gymMap, 'resize');
-
-  if (isUserLocation) {
-    placeUserDot(lat, lng);
-  } else {
-    var searchPin = new google.maps.Marker({
-      map: _gymMap, position: { lat: lat, lng: lng }, zIndex: 999, title: label,
-      icon: { path: google.maps.SymbolPath.CIRCLE, scale: 9,
-              fillColor:'#b8906a', fillOpacity:1, strokeColor:'#fff', strokeWeight:3 }
-    });
-    _gymMarkers.push(searchPin);
-    if (_userLat !== null) placeUserDot(_userLat, _userLng);
-  }
-
-  searchAllFitnessVenues(lat, lng, function (rawResults) {
-    var sorted = rawResults
-      .map(function (p) {
-        return Object.assign({}, p, {
-          dist: calcMiles(lat, lng, p.geometry.location.lat(), p.geometry.location.lng())
-        });
-      })
-      .filter(function (p) { return p.dist <= 3; })
-      .sort(function (a, b) { return a.dist - b.dist; })
-      .slice(0, 12);
-
-    if (!sorted.length) {
-      gymList.innerHTML = '<p style="color:var(--text-soft);font-size:13px;text-align:center;padding:20px;">No fitness venues found within 3 miles. Try searching a different area.</p>';
-      return;
     }
 
-    sorted.forEach(function (p) {
-      var ft     = getFitnessType(p.name, p.types);
-      var marker = new google.maps.Marker({
-        map: _gymMap, position: p.geometry.location, title: p.name,
-        icon: { path: google.maps.SymbolPath.CIRCLE, scale: 8,
-                fillColor:'#b8906a', fillOpacity:1, strokeColor:'#fff', strokeWeight:2 }
-      });
-      var iw = new google.maps.InfoWindow({
-        content: '<div style="font-family:Inter,sans-serif;padding:2px 4px;">' +
-                 '<b style="font-size:13px;">' + ft.emoji + ' ' + p.name + '</b><br>' +
-                 '<span style="font-size:12px;color:#6b5c54;">📍 ' + p.dist.toFixed(1) + ' mi away</span></div>'
-      });
-      marker.addListener('click', function () { iw.open(_gymMap, marker); });
-      _gymMarkers.push(marker);
-    });
+    var _gymMap = null;
+    var _gymService = null;
+    var _gymMarkers = [];
+    var _userOverlay = null;
+    var _userMarker = null;
+    var _userLat = null;
+    var _userLng = null;
+    var _searchLat = null;
+    var _searchLng = null;
+    var _searchLabel = '';
 
-    var items   = sorted.map(function (p) { return { place: p, detail: null }; });
-    var fetched = 0;
+    function calcMiles(lat1, lng1, lat2, lng2) {
+      var R = 3958.8;
+      var dLat = (lat2 - lat1) * Math.PI / 180;
+      var dLng = (lng2 - lng1) * Math.PI / 180;
 
-    sorted.forEach(function (place, i) {
-      _gymService.getDetails(
-        { placeId: place.place_id, fields: ['opening_hours', 'types', 'formatted_address'] },
-        function (detail, s) {
-          if (s === google.maps.places.PlacesServiceStatus.OK && detail) items[i].detail = detail;
-          if (++fetched === sorted.length) renderGymList();
+      var a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) *
+        Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    function getFitnessType(name, types) {
+      var n = (name || '').toLowerCase();
+
+      if (n.includes('f45')) return { emoji: '⚡', label: 'F45 Training' };
+      if (n.includes('crossfit')) return { emoji: '🔥', label: 'CrossFit' };
+      if (n.includes('pilates')) return { emoji: '🤸', label: 'Pilates' };
+      if (n.includes('yoga')) return { emoji: '🧘', label: 'Yoga' };
+      if (n.includes('spin') || n.includes('cycle') || n.includes('cycling')) return { emoji: '🚴', label: 'Cycling' };
+      if (n.includes('boxing') || n.includes('muay') || n.includes('kickbox')) return { emoji: '🥊', label: 'Boxing' };
+      if (n.includes('swim')) return { emoji: '🏊', label: 'Swimming' };
+      if (n.includes('hiit') || n.includes('barry')) return { emoji: '🔥', label: 'HIIT' };
+      if (n.includes('barre')) return { emoji: '🩰', label: 'Barre' };
+      if (n.includes('climb')) return { emoji: '🧗', label: 'Climbing' };
+      if (n.includes('dance') || n.includes('zumba')) return { emoji: '💃', label: 'Dance Fitness' };
+      if ((types || []).includes('gym')) return { emoji: '🏋️', label: 'Gym' };
+
+      return { emoji: '🏃', label: 'Fitness Studio' };
+    }
+
+    function _bootstrapMaps() {
+      if (window._gymMapsLoading || window._gymMapsLoaded || window._gymMapsError) return;
+
+      window._gymMapsLoading = true;
+
+      var s = document.createElement('script');
+      s.src = 'https://maps.googleapis.com/maps/api/js?key=' + CONFIG.google_maps_key + '&libraries=places&callback=initMap';
+      s.async = true;
+
+      s.onerror = function () {
+        window._gymMapsLoading = false;
+        window._gymMapsError = true;
+
+        showToast('❌ Maps failed to load — check your connection and try refreshing');
+        document.getElementById('gymPlaceholder').style.display = 'block';
+        document.getElementById('locationBanner').style.display = 'none';
+        document.getElementById('gymPlaceholder').querySelector('p').textContent =
+          '⚠️ Google Maps could not be loaded. Please check your connection and refresh the page.';
+      };
+
+      document.head.appendChild(s);
+    }
+
+    window.initMap = function () {
+      window._gymMapsLoaded = true;
+      window._gymMapsLoading = false;
+
+      function PulsingDot(latLng) {
+        this._latLng = latLng;
+        this._div = null;
+      }
+
+      PulsingDot.prototype = Object.create(google.maps.OverlayView.prototype);
+
+      PulsingDot.prototype.onAdd = function () {
+        var d = document.createElement('div');
+        d.className = 'user-dot-outer';
+        d.innerHTML = '<div class="user-dot-inner"></div>';
+        this._div = d;
+        this.getPanes().overlayMouseTarget.appendChild(d);
+      };
+
+      PulsingDot.prototype.draw = function () {
+        if (!this._div) return;
+        var pt = this.getProjection().fromLatLngToDivPixel(this._latLng);
+        this._div.style.left = pt.x + 'px';
+        this._div.style.top = pt.y + 'px';
+      };
+
+      PulsingDot.prototype.onRemove = function () {
+        if (this._div && this._div.parentNode) {
+          this._div.parentNode.removeChild(this._div);
+          this._div = null;
+        }
+      };
+
+      window._PulsingDot = PulsingDot;
+
+      var mapEl = document.getElementById('map');
+      mapEl.style.display = 'block';
+
+      _gymMap = new google.maps.Map(mapEl, {
+        center: { lat: 51.505, lng: -0.09 },
+        zoom: 14,
+        styles: [
+          { elementType: 'geometry', stylers: [{ color: '#f5f0eb' }] },
+          { elementType: 'labels.text.fill', stylers: [{ color: '#6b5c54' }] },
+          { elementType: 'labels.text.stroke', stylers: [{ color: '#fdf5ed' }] },
+          { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#ecddd4' }] },
+          { featureType: 'road', elementType: 'labels.text.fill', stylers: [{ color: '#9b8e87' }] },
+          { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#d4e8f0' }] },
+          { featureType: 'poi', elementType: 'geometry', stylers: [{ color: '#f0e8e0' }] }
+        ]
+      });
+
+      _gymService = new google.maps.places.PlacesService(_gymMap);
+
+      if (window._pendingSearch) {
+        var q = window._pendingSearch;
+        window._pendingSearch = null;
+        _geocodeAndSearch(q);
+      } else if (window._pendingLat != null) {
+        var lat = window._pendingLat;
+        var lng = window._pendingLng;
+        window._pendingLat = null;
+        window._pendingLng = null;
+        doSearchAt(lat, lng, 'My Location', true);
+      } else {
+        mapEl.style.display = 'none';
+      }
+    };
+
+    function autoDetectLocation() {
+      if (!navigator.geolocation) {
+        document.getElementById('locationBanner').style.display = 'none';
+        document.getElementById('gymPlaceholder').style.display = 'block';
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        function (pos) {
+          _userLat = pos.coords.latitude;
+          _userLng = pos.coords.longitude;
+
+          document.getElementById('locationBanner').style.display = 'none';
+          document.getElementById('gymPlaceholder').style.display = 'none';
+
+          if (window._gymMapsLoaded) {
+            doSearchAt(_userLat, _userLng, 'My Location', true);
+          } else {
+            window._pendingLat = _userLat;
+            window._pendingLng = _userLng;
+          }
+        },
+        function () {
+          document.getElementById('locationBanner').style.display = 'none';
+          document.getElementById('gymPlaceholder').style.display = 'block';
+          showToast('📍 Location denied — search a city instead');
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
         }
       );
-    });
-
-    function renderGymList() {
-      var dayIdx = new Date().getDay();
-      var wdIdx  = dayIdx === 0 ? 6 : dayIdx - 1;
-
-      gymList.innerHTML =
-        '<div class="gym-count-badge">' + sorted.length + ' venues found within 3 miles</div>' +
-        items.map(function (item) {
-          var place  = item.place;
-          var detail = item.detail;
-          var hours  = detail && detail.opening_hours;
-          var isOpen = hours && typeof hours.isOpen === 'function' ? hours.isOpen() : null;
-
-          var todayTxt = hours && hours.weekday_text && hours.weekday_text[wdIdx] ? hours.weekday_text[wdIdx] : '';
-          var hoursStr = todayTxt ? todayTxt.split(': ').slice(1).join(': ') : '';
-
-          var openBadge;
-          if (isOpen === null)  openBadge = '<span class="gym-hours-na">Hours unavailable</span>';
-          else if (isOpen)      openBadge = '<span class="gym-open">● Open now</span>';
-          else                  openBadge = '<span class="gym-closed">● Closed now</span>';
-
-          var ft = getFitnessType(place.name, (detail && detail.types) || place.types);
-
-          /* Use place_id for the most accurate Maps deep-link */
-          var mapsUrl = 'https://www.google.com/maps/place/?q=place_id:' + place.place_id;
-
-          return '<div class="gym-item">' +
-                   '<div class="gym-icon-wrap">' + ft.emoji + '</div>' +
-                   '<div style="flex:1;min-width:0;">' +
-                     '<div class="gym-name">' + place.name + '</div>' +
-                     '<div class="gym-meta">' +
-                       '<span class="gym-type">' + ft.label + '</span>' +
-                       '<span class="gym-dist">📍 ' + place.dist.toFixed(1) + ' mi away</span>' +
-                     '</div>' +
-                     '<div class="gym-hours-row">' +
-                       openBadge +
-                       (hoursStr ? '<span class="gym-hours-text">· ' + hoursStr + '</span>' : '') +
-                     '</div>' +
-                     '<a href="' + mapsUrl + '" target="_blank" rel="noopener" class="gym-maps-btn">🗺 Open in Google Maps</a>' +
-                   '</div>' +
-                 '</div>';
-        }).join('');
     }
-  });
-}
 
-/* ─────────────────────────────────────────────────────────────
-   EMAIL
-───────────────────────────────────────────────────────────── */
-var _emailjsInit = false;
-async function sendEmail(email, data) {
-  var btn = document.getElementById('calcBtn');
-  btn.disabled = true;
-  document.getElementById('btnText').innerHTML = '<span class="spinner"></span> Sending...';
-  try {
-    if (!_emailjsInit) { emailjs.init(CONFIG.emailjs_public_key); _emailjsInit = true; }
-    await emailjs.send(CONFIG.emailjs_service_id, CONFIG.emailjs_template_id, {
-      to_email  : email,
-      tdee      : Math.round(data.tdee).toLocaleString('en-GB'),
-      protein   : Math.round(data.proteinG),
-      fat       : Math.round(data.fatG),
-      carbs     : Math.round(data.carbG),
-      goal_label: GOAL_LABELS[data.goal],
-      gender    : data.gender,
-      age       : data.age,
-      height    : data.heightDisplay,
-      weight    : data.weightDisplay,
-    });
-    document.getElementById('emailBannerText').textContent = 'Your plan has been sent to ' + email;
-    document.getElementById('emailBanner').style.display = 'flex';
-  } catch (err) {
-    console.error(err);
-    showToast('❌ Could not send email. Please try again.');
-  } finally {
-    btn.disabled = false;
-    document.getElementById('btnText').textContent = 'Recalculate →';
-  }
-}
+    function requestLocation() {
+      if (!navigator.geolocation) {
+        showToast('Geolocation not supported');
+        return;
+      }
 
-function showToast(msg) {
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(function () { t.classList.remove('show'); }, 3000);
-}
-</script>
+      showToast('📡 Finding your location...');
+
+      navigator.geolocation.getCurrentPosition(
+        function (pos) {
+          _userLat = pos.coords.latitude;
+          _userLng = pos.coords.longitude;
+
+          document.getElementById('gymPlaceholder').style.display = 'none';
+          document.getElementById('locationBanner').style.display = 'none';
+
+          if (window._gymMapsLoaded) {
+            doSearchAt(_userLat, _userLng, 'My Location', true);
+          } else {
+            _bootstrapMaps();
+            window._pendingLat = _userLat;
+            window._pendingLng = _userLng;
+          }
+        },
+        function () {
+          showToast('⚠️ Location access denied');
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
+        }
+      );
+    }
+
+    function searchLocation() {
+      var input = document.getElementById('gymSearchInput').value.trim();
+
+      if (!input) {
+        showToast('⚠️ Enter a location to search');
+        return;
+      }
+
+      if (window._gymMapsError) {
+        showToast('❌ Maps failed to load — please refresh the page');
+        return;
+      }
+
+      document.getElementById('locationBanner').style.display = 'none';
+      document.getElementById('gymPlaceholder').style.display = 'none';
+
+      _bootstrapMaps();
+
+      if (!window._gymMapsLoaded) {
+        window._pendingSearch = input;
+        showToast('⏳ Map is loading, please wait...');
+        return;
+      }
+
+      _geocodeAndSearch(input);
+    }
+
+    function _geocodeAndSearch(address) {
+      showToast('🔍 Searching for "' + address + '"...');
+
+      var geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ address: address }, function (results, status) {
+        if (status === 'OK' && results[0]) {
+          var loc = results[0].geometry.location;
+          _searchLat = loc.lat();
+          _searchLng = loc.lng();
+          _searchLabel = results[0].formatted_address;
+
+          doSearchAt(_searchLat, _searchLng, _searchLabel, false);
+        } else {
+          showToast('⚠️ Location not found — try a more specific address');
+        }
+      });
+    }
+
+    var FITNESS_QUERIES = [
+      { type: 'gym' },
+      { keyword: 'crossfit' },
+      { keyword: 'f45 training' },
+      { keyword: 'pilates studio' },
+      { keyword: 'yoga studio' },
+      { keyword: 'boxing gym' },
+      { keyword: 'spin cycling class' },
+      { keyword: 'barre fitness' },
+    ];
+
+    function searchAllFitnessVenues(lat, lng, onDone) {
+      var seen = {};
+      var results = [];
+      var pending = FITNESS_QUERIES.length;
+
+      FITNESS_QUERIES.forEach(function (params) {
+        var req = {
+          location: { lat: lat, lng: lng },
+          radius: 4828
+        };
+
+        if (params.type) req.type = params.type;
+        if (params.keyword) req.keyword = params.keyword;
+
+        _gymService.nearbySearch(req, function (res, status) {
+          if (status === google.maps.places.PlacesServiceStatus.OK && res) {
+            res.forEach(function (r) {
+              if (!seen[r.place_id]) {
+                seen[r.place_id] = true;
+                results.push(r);
+              }
+            });
+          }
+
+          pending--;
+          if (pending === 0) onDone(results);
+        });
+      });
+    }
+
+    function placeUserDot(lat, lng) {
+      if (_userOverlay) {
+        _userOverlay.setMap(null);
+        _userOverlay = null;
+      }
+      if (_userMarker) {
+        _userMarker.setMap(null);
+        _userMarker = null;
+      }
+
+      if (window._PulsingDot) {
+        _userOverlay = new window._PulsingDot(new google.maps.LatLng(lat, lng));
+        _userOverlay.setMap(_gymMap);
+      } else {
+        _userMarker = new google.maps.Marker({
+          map: _gymMap,
+          position: { lat: lat, lng: lng },
+          zIndex: 999,
+          title: 'Your Location',
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 9,
+            fillColor: '#4285F4',
+            fillOpacity: 1,
+            strokeColor: '#fff',
+            strokeWeight: 3
+          }
+        });
+      }
+    }
+
+    function doSearchAt(lat, lng, label, isUserLocation) {
+      var mapEl = document.getElementById('map');
+      var gymList = document.getElementById('gymList');
+
+      _searchLat = lat;
+      _searchLng = lng;
+      _searchLabel = label;
+
+      document.getElementById('gymPlaceholder').style.display = 'none';
+      document.getElementById('locationBanner').style.display = 'none';
+      mapEl.style.display = 'block';
+      gymList.style.display = 'block';
+
+      gymList.innerHTML = '<p style="color:var(--text-soft);font-size:13px;text-align:center;padding:20px;">🔍 Searching for fitness venues nearby...</p>';
+
+      _gymMarkers.forEach(function (m) { m.setMap(null); });
+      _gymMarkers = [];
+
+      _gymMap.setCenter({ lat: lat, lng: lng });
+      _gymMap.setZoom(14);
+      google.maps.event.trigger(_gymMap, 'resize');
+
+      if (isUserLocation) {
+        placeUserDot(lat, lng);
+      } else {
+        var searchPin = new google.maps.Marker({
+          map: _gymMap,
+          position: { lat: lat, lng: lng },
+          zIndex: 999,
+          title: label,
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 9,
+            fillColor: '#b8906a',
+            fillOpacity: 1,
+            strokeColor: '#fff',
+            strokeWeight: 3
+          }
+        });
+
+        _gymMarkers.push(searchPin);
+
+        if (_userLat !== null && _userLng !== null) {
+          placeUserDot(_userLat, _userLng);
+        }
+      }
+
+      searchAllFitnessVenues(lat, lng, function (rawResults) {
+        var sorted = rawResults
+          .map(function (p) {
+            return Object.assign({}, p, {
+              dist: calcMiles(lat, lng, p.geometry.location.lat(), p.geometry.location.lng())
+            });
+          })
+          .filter(function (p) {
+            return p.dist <= 3;
+          })
+          .sort(function (a, b) {
+            return a.dist - b.dist;
+          })
+          .slice(0, 12);
+
+        if (!sorted.length) {
+          gymList.innerHTML = '<p style="color:var(--text-soft);font-size:13px;text-align:center;padding:20px;">No fitness venues found within 3 miles. Try searching a different area.</p>';
+          return;
+        }
+
+        var bounds = new google.maps.LatLngBounds();
+        bounds.extend({ lat: lat, lng: lng });
+
+        sorted.forEach(function (p) {
+          var ft = getFitnessType(p.name, p.types);
+
+          var marker = new google.maps.Marker({
+            map: _gymMap,
+            position: p.geometry.location,
+            title: p.name,
+            icon: {
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: 8,
+              fillColor: '#b8906a',
+              fillOpacity: 1,
+              strokeColor: '#fff',
+              strokeWeight: 2
+            }
+          });
+
+          var iw = new google.maps.InfoWindow({
+            content:
+              '<div style="font-family:Inter,sans-serif;padding:2px 4px;">' +
+                '<b style="font-size:13px;">' + ft.emoji + ' ' + p.name + '</b><br>' +
+                '<span style="font-size:12px;color:#6b5c54;">📍 ' + p.dist.toFixed(1) + ' mi away</span><br>' +
+                '<span style="font-size:12px;color:#6b5c54;">🏷 ' + ft.label + '</span>' +
+              '</div>'
+          });
+
+          marker.addListener('click', function () {
+            iw.open(_gymMap, marker);
+          });
+
+          _gymMarkers.push(marker);
+          bounds.extend(p.geometry.location);
+        });
+
+        if (sorted.length > 1) {
+          _gymMap.fitBounds(bounds, 60);
+        }
+
+        var items = sorted.map(function (p) {
+          return { place: p, detail: null };
+        });
+
+        var fetched = 0;
+
+        sorted.forEach(function (place, i) {
+          _gymService.getDetails(
+            {
+              placeId: place.place_id,
+              fields: ['name', 'opening_hours', 'types', 'formatted_address', 'website']
+            },
+            function (detail, status) {
+              if (status === google.maps.places.PlacesServiceStatus.OK && detail) {
+                items[i].detail = detail;
+              }
+              fetched++;
+              if (fetched === sorted.length) renderGymList();
+            }
+          );
+        });
+
+        function renderGymList() {
+          var now = new Date();
+          var jsDay = now.getDay();
+          var weekdayIndex = jsDay === 0 ? 6 : jsDay - 1;
+
+          gymList.innerHTML =
+            '<div class="gym-count-badge">' + sorted.length + ' venues found within 3 miles</div>' +
+            items.map(function (item) {
+              var place = item.place;
+              var detail = item.detail;
+              var ft = getFitnessType(place.name, (detail && detail.types) || place.types);
+
+              var hours = detail && detail.opening_hours ? detail.opening_hours : null;
+              var openNow = (hours && typeof hours.open_now === 'boolean') ? hours.open_now : null;
+              var weekdayText = hours && hours.weekday_text ? hours.weekday_text[weekdayIndex] : '';
+              var hoursStr = weekdayText ? weekdayText.split(': ').slice(1).join(': ') : '';
+
+              var openBadge = '';
+              if (openNow === null) {
+                openBadge = '<span class="gym-hours-na">Hours unavailable</span>';
+              } else if (openNow) {
+                openBadge = '<span class="gym-open">● Open now</span>';
+              } else {
+                openBadge = '<span class="gym-closed">● Closed now</span>';
+              }
+
+              var mapsUrl = 'https://www.google.com/maps/place/?q=place_id:' + place.place_id;
+
+              return (
+                '<div class="gym-item">' +
+                  '<div class="gym-icon-wrap">' + ft.emoji + '</div>' +
+                  '<div style="flex:1;min-width:0;">' +
+                    '<div class="gym-name">' + place.name + '</div>' +
+                    '<div class="gym-meta">' +
+                      '<span class="gym-type">' + ft.label + '</span>' +
+                      '<span class="gym-dist">📍 ' + place.dist.toFixed(1) + ' mi away</span>' +
+                    '</div>' +
+                    '<div class="gym-hours-row">' +
+                      openBadge +
+                      (hoursStr ? '<span class="gym-hours-text">· ' + hoursStr + '</span>' : '') +
+                    '</div>' +
+                    '<a href="' + mapsUrl + '" target="_blank" rel="noopener" class="gym-maps-btn">🗺 Open in Google Maps</a>' +
+                  '</div>' +
+                '</div>'
+              );
+            }).join('');
+        }
+      });
+    }
+
+    var _emailjsInit = false;
+
+    async function sendEmail(email, data) {
+      var btn = document.getElementById('calcBtn');
+      btn.disabled = true;
+      document.getElementById('btnText').innerHTML = '<span class="spinner"></span> Sending...';
+
+      try {
+        if (!_emailjsInit) {
+          emailjs.init(CONFIG.emailjs_public_key);
+          _emailjsInit = true;
+        }
+
+        await emailjs.send(CONFIG.emailjs_service_id, CONFIG.emailjs_template_id, {
+          to_email  : email,
+          tdee      : Math.round(data.tdee).toLocaleString('en-GB'),
+          protein   : Math.round(data.proteinG),
+          fat       : Math.round(data.fatG),
+          carbs     : Math.round(data.carbG),
+          goal_label: GOAL_LABELS[data.goal],
+          gender    : data.gender,
+          age       : data.age,
+          height    : data.heightDisplay,
+          weight    : data.weightDisplay,
+        });
+
+        document.getElementById('emailBannerText').textContent = 'Your plan has been sent to ' + email;
+        document.getElementById('emailBanner').style.display = 'flex';
+      } catch (err) {
+        console.error(err);
+        showToast('❌ Could not send email. Please try again.');
+      } finally {
+        btn.disabled = false;
+        document.getElementById('btnText').textContent = 'Recalculate →';
+      }
+    }
+
+    function showToast(msg) {
+      var t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+
+      setTimeout(function () {
+        t.classList.remove('show');
+      }, 3000);
+    }
+  </script>
 </body>
 </html>
