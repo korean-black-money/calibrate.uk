@@ -1169,15 +1169,15 @@
       },
     };
 
-    const FITNESS_QUERIES = [
-      { type: 'gym' },
-      { keyword: 'crossfit' },
-      { keyword: 'f45 training' },
-      { keyword: 'pilates studio' },
-      { keyword: 'yoga studio' },
-      { keyword: 'boxing gym' },
-      { keyword: 'spin cycling class' },
-      { keyword: 'barre fitness' },
+    const FITNESS_TEXT_QUERIES = [
+      'gym',
+      'crossfit',
+      'f45 training',
+      'pilates studio',
+      'yoga studio',
+      'boxing gym',
+      'spin cycling class',
+      'barre fitness',
     ];
 
     const SEARCH_RADIUS_MILES = 3;
@@ -1320,7 +1320,6 @@
     }
 
     var _gymMap = null;
-    var _gymService = null;
     var _gymMarkers = [];
     var _userOverlay = null;
     var _userMarker = null;
@@ -1347,23 +1346,128 @@
       return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     }
 
-    function getFitnessType(name, types) {
+    function getFitnessType(name, types, primaryType) {
       var n = (name || '').toLowerCase();
+      var allTypes = ((types || []).concat(primaryType || '')).join(' ').toLowerCase();
 
       if (n.includes('f45')) return { emoji: '⚡', label: 'F45 Training' };
-      if (n.includes('crossfit')) return { emoji: '🔥', label: 'CrossFit' };
-      if (n.includes('pilates')) return { emoji: '🤸', label: 'Pilates' };
-      if (n.includes('yoga')) return { emoji: '🧘', label: 'Yoga' };
-      if (n.includes('spin') || n.includes('cycle') || n.includes('cycling')) return { emoji: '🚴', label: 'Cycling' };
-      if (n.includes('boxing') || n.includes('muay') || n.includes('kickbox')) return { emoji: '🥊', label: 'Boxing' };
-      if (n.includes('swim')) return { emoji: '🏊', label: 'Swimming' };
+      if (n.includes('crossfit') || allTypes.includes('crossfit')) return { emoji: '🔥', label: 'CrossFit' };
+      if (n.includes('pilates') || allTypes.includes('pilates')) return { emoji: '🤸', label: 'Pilates' };
+      if (n.includes('yoga') || allTypes.includes('yoga')) return { emoji: '🧘', label: 'Yoga' };
+      if (n.includes('spin') || n.includes('cycle') || n.includes('cycling') || allTypes.includes('cycling')) return { emoji: '🚴', label: 'Cycling' };
+      if (n.includes('boxing') || n.includes('muay') || n.includes('kickbox') || allTypes.includes('boxing')) return { emoji: '🥊', label: 'Boxing' };
+      if (n.includes('swim') || allTypes.includes('swimming')) return { emoji: '🏊', label: 'Swimming' };
       if (n.includes('hiit') || n.includes('barry')) return { emoji: '🔥', label: 'HIIT' };
-      if (n.includes('barre')) return { emoji: '🩰', label: 'Barre' };
-      if (n.includes('climb')) return { emoji: '🧗', label: 'Climbing' };
-      if (n.includes('dance') || n.includes('zumba')) return { emoji: '💃', label: 'Dance Fitness' };
-      if ((types || []).includes('gym')) return { emoji: '🏋️', label: 'Gym' };
+      if (n.includes('barre') || allTypes.includes('barre')) return { emoji: '🩰', label: 'Barre' };
+      if (n.includes('climb') || allTypes.includes('climbing')) return { emoji: '🧗', label: 'Climbing' };
+      if (n.includes('dance') || n.includes('zumba') || allTypes.includes('dance')) return { emoji: '💃', label: 'Dance Fitness' };
+      if (allTypes.includes('gym')) return { emoji: '🏋️', label: 'Gym' };
+      if (allTypes.includes('sports_school')) return { emoji: '🏃', label: 'Sports School' };
 
       return { emoji: '🏃', label: 'Fitness Studio' };
+    }
+
+    async function placesApiPost(path, fieldMask, payload) {
+      var res = await fetch('https://places.googleapis.com/v1/' + path, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Goog-Api-Key': CONFIG.google_maps_key,
+          'X-Goog-FieldMask': fieldMask
+        },
+        body: JSON.stringify(payload)
+      });
+
+      var data = await res.json().catch(function () { return {}; });
+      if (!res.ok) {
+        throw new Error((data && data.error && data.error.message) || 'Google Places request failed.');
+      }
+
+      return data;
+    }
+
+    function normalizePlacesApiPlace(place) {
+      return {
+        id: place.id || '',
+        name: (place.displayName && place.displayName.text) || place.formattedAddress || 'Unknown place',
+        formattedAddress: place.formattedAddress || '',
+        location: place.location || { latitude: 0, longitude: 0 },
+        types: place.types || [],
+        primaryType: place.primaryType || '',
+        currentOpeningHours: place.currentOpeningHours || null,
+        regularOpeningHours: place.regularOpeningHours || null,
+        googleMapsUri: place.googleMapsUri || ''
+      };
+    }
+
+    async function searchLocationByText(address) {
+      var data = await placesApiPost(
+        'places:searchText',
+        'places.id,places.displayName,places.formattedAddress,places.location',
+        {
+          textQuery: address,
+          pageSize: 1,
+          languageCode: 'en'
+        }
+      );
+
+      if (!data.places || !data.places.length) {
+        throw new Error('Location not found. Try a more specific place name, postcode, or neighbourhood.');
+      }
+
+      return normalizePlacesApiPlace(data.places[0]);
+    }
+
+    function searchAllFitnessVenues(lat, lng, onDone) {
+      var fieldMask = [
+        'places.id',
+        'places.displayName',
+        'places.formattedAddress',
+        'places.location',
+        'places.types',
+        'places.primaryType',
+        'places.currentOpeningHours',
+        'places.regularOpeningHours',
+        'places.googleMapsUri'
+      ].join(',');
+
+      Promise.all(FITNESS_TEXT_QUERIES.map(function (query) {
+        return placesApiPost('places:searchText', fieldMask, {
+          textQuery: query,
+          pageSize: 10,
+          languageCode: 'en',
+          locationBias: {
+            circle: {
+              center: { latitude: lat, longitude: lng },
+              radius: SEARCH_RADIUS_METERS
+            }
+          }
+        }).catch(function () {
+          return { places: [] };
+        });
+      }))
+        .then(function (responses) {
+          var seen = {};
+          var results = [];
+
+          responses.forEach(function (data) {
+            (data.places || []).forEach(function (place) {
+              var normalized = normalizePlacesApiPlace(place);
+              if (!normalized.id || seen[normalized.id]) return;
+              seen[normalized.id] = true;
+              results.push(normalized);
+            });
+          });
+
+          if (!results.length) {
+            throw new Error('No places were returned from Places API (New).');
+          }
+
+          onDone(results, null);
+        })
+        .catch(function (error) {
+          onDone([], error);
+        });
     }
 
     function _bootstrapMaps() {
@@ -1372,7 +1476,7 @@
       window._gymMapsLoading = true;
 
       var s = document.createElement('script');
-      s.src = 'https://maps.googleapis.com/maps/api/js?key=' + CONFIG.google_maps_key + '&libraries=places&callback=initMap';
+      s.src = 'https://maps.googleapis.com/maps/api/js?key=' + CONFIG.google_maps_key + '&callback=initMap';
       s.async = true;
 
       s.onerror = function () {
@@ -1450,8 +1554,6 @@
           { featureType: 'poi', elementType: 'geometry', stylers: [{ color: '#f0e8e0' }] }
         ]
       });
-
-      _gymService = new google.maps.places.PlacesService(_gymMap);
 
       if (window._pendingSearch) {
         var q = window._pendingSearch;
@@ -1589,56 +1691,19 @@
     function _geocodeAndSearch(address) {
       showToast('🔍 Searching for "' + address + '"...');
 
-      var geocoder = new google.maps.Geocoder();
-      geocoder.geocode({ address: address }, function (results, status) {
-        if (status === 'OK' && results[0]) {
-          var loc = results[0].geometry.location;
-          _searchLat = loc.lat();
-          _searchLng = loc.lng();
-          _searchLabel = results[0].formatted_address;
+      searchLocationByText(address)
+        .then(function (place) {
+          _searchLat = place.location.latitude;
+          _searchLng = place.location.longitude;
+          _searchLabel = place.formattedAddress || place.name;
           document.getElementById('gymSearchInput').value = _searchLabel;
 
           doSearchAt(_searchLat, _searchLng, _searchLabel, false);
-        } else {
-          setGymStatus('Location not found', 'Try a more specific place name, postcode, or neighbourhood.');
+        })
+        .catch(function (error) {
+          setGymStatus('Location not found', error.message || 'Try a more specific place name, postcode, or neighbourhood.');
           showToast('⚠️ Location not found - try a more specific address');
-        }
-      });
-    }
-
-    function searchAllFitnessVenues(lat, lng, onDone) {
-      if (!_gymService) {
-        onDone([]);
-        return;
-      }
-
-      var seen = {};
-      var results = [];
-      var pending = FITNESS_QUERIES.length;
-
-      FITNESS_QUERIES.forEach(function (params) {
-        var req = {
-          location: { lat: lat, lng: lng },
-          radius: SEARCH_RADIUS_METERS
-        };
-
-        if (params.type) req.type = params.type;
-        if (params.keyword) req.keyword = params.keyword;
-
-        _gymService.nearbySearch(req, function (res, status) {
-          if (status === google.maps.places.PlacesServiceStatus.OK && res) {
-            res.forEach(function (r) {
-              if (!seen[r.place_id]) {
-                seen[r.place_id] = true;
-                results.push(r);
-              }
-            });
-          }
-
-          pending--;
-          if (pending === 0) onDone(results);
         });
-      });
     }
 
     function placeUserDot(lat, lng) {
@@ -1727,13 +1792,19 @@
         }
       }
 
-      searchAllFitnessVenues(lat, lng, function (rawResults) {
+      searchAllFitnessVenues(lat, lng, function (rawResults, error) {
         if (searchToken !== _activeGymSearchToken) return;
+
+        if (error) {
+          gymList.innerHTML = '<p style="color:var(--text-soft);font-size:13px;text-align:center;padding:20px;">Unable to load fitness venues right now. Please try again shortly.</p>';
+          setGymStatus('Venue search unavailable', error.message || 'Places API (New) request failed.');
+          return;
+        }
 
         var sorted = rawResults
           .map(function (p) {
             return Object.assign({}, p, {
-              dist: calcMiles(lat, lng, p.geometry.location.lat(), p.geometry.location.lng())
+              dist: calcMiles(lat, lng, p.location.latitude, p.location.longitude)
             });
           })
           .filter(function (p) {
@@ -1754,11 +1825,12 @@
         bounds.extend({ lat: lat, lng: lng });
 
         sorted.forEach(function (p) {
-          var ft = getFitnessType(p.name, p.types);
+          var ft = getFitnessType(p.name, p.types, p.primaryType);
+          var markerPosition = { lat: p.location.latitude, lng: p.location.longitude };
 
           var marker = new google.maps.Marker({
             map: _gymMap,
-            position: p.geometry.location,
+            position: markerPosition,
             title: p.name,
             icon: {
               path: google.maps.SymbolPath.CIRCLE,
@@ -1784,51 +1856,27 @@
           });
 
           _gymMarkers.push(marker);
-          bounds.extend(p.geometry.location);
+          bounds.extend(markerPosition);
         });
 
         if (sorted.length > 1) {
           _gymMap.fitBounds(bounds, 60);
         }
 
-        var items = sorted.map(function (p) {
-          return { place: p, detail: null };
-        });
+        renderGymList(sorted);
 
-        var fetched = 0;
-
-        sorted.forEach(function (place, i) {
-          _gymService.getDetails(
-            {
-              placeId: place.place_id,
-              fields: ['name', 'opening_hours', 'current_opening_hours', 'types', 'formatted_address']
-            },
-            function (detail, status) {
-              if (searchToken !== _activeGymSearchToken) return;
-              if (status === google.maps.places.PlacesServiceStatus.OK && detail) {
-                items[i].detail = detail;
-              }
-              fetched++;
-              if (fetched === sorted.length) renderGymList();
-            }
-          );
-        });
-
-        function renderGymList() {
+        function renderGymList(items) {
           var now = new Date();
           var jsDay = now.getDay();
           var weekdayIndex = jsDay === 0 ? 6 : jsDay - 1;
 
           gymList.innerHTML =
-            '<div class="gym-count-badge">' + sorted.length + ' venues found within ' + SEARCH_RADIUS_MILES + ' miles of ' + escapeHtml(label) + '</div>' +
-            items.map(function (item) {
-              var place = item.place;
-              var detail = item.detail;
-              var ft = getFitnessType(place.name, (detail && detail.types) || place.types);
-
-              var hours = detail && (detail.current_opening_hours || detail.opening_hours) ? (detail.current_opening_hours || detail.opening_hours) : null;
-              var openNow = (hours && typeof hours.open_now === 'boolean') ? hours.open_now : null;
-              var weekdayText = hours && hours.weekday_text ? hours.weekday_text[weekdayIndex] : '';
+            '<div class="gym-count-badge">' + items.length + ' venues found within ' + SEARCH_RADIUS_MILES + ' miles of ' + escapeHtml(label) + '</div>' +
+            items.map(function (place) {
+              var ft = getFitnessType(place.name, place.types, place.primaryType);
+              var hours = place.currentOpeningHours || place.regularOpeningHours || null;
+              var openNow = (hours && typeof hours.openNow === 'boolean') ? hours.openNow : null;
+              var weekdayText = hours && hours.weekdayDescriptions ? hours.weekdayDescriptions[weekdayIndex] : '';
               var hoursStr = weekdayText ? weekdayText.split(': ').slice(1).join(': ') : '';
 
               var openBadge = '';
@@ -1840,7 +1888,7 @@
                 openBadge = '<span class="gym-closed">● Closed now</span>';
               }
 
-              var mapsUrl = 'https://www.google.com/maps/place/?q=place_id:' + encodeURIComponent(place.place_id);
+              var mapsUrl = place.googleMapsUri || ('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(place.name + ' ' + (place.formattedAddress || '')));
 
               return (
                 '<div class="gym-item">' +
