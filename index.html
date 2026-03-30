@@ -1259,7 +1259,7 @@ function doSearchAt(lat, lng, label, isUserLocation) {
     /* ─ Send email with Top 5 venue data now that gym search is complete ─ */
     if (!_emailSent && _pendingEmailData) {
       clearTimeout(_emailFallbackTimer);
-      _dispatchEmail(_pendingEmailData, sorted.slice(0, 5));
+      _dispatchEmail(_pendingEmailData, getEmailTopVenues(sorted));
     }
   });
 }
@@ -1275,6 +1275,12 @@ function _formatVenuesForEmail(venues) {
     var open  = hours ? (hours.openNow ? 'Open now' : 'Closed now') : 'Hours N/A';
     return (i+1) + '. ' + ft.emoji + ' ' + v.name + ' | ' + ft.label + ' | ' + v.dist.toFixed(1) + ' mi | ' + open;
   }).join('\n');
+}
+
+function getEmailTopVenues(nearbyPlaces) {
+  var rec = getRecommendation(nearbyPlaces);
+  if (!rec || !rec.recommendedFacilities || !rec.recommendedFacilities.length) return [];
+  return rec.recommendedFacilities;
 }
 
 function _dispatchEmail(data, topVenues) {
