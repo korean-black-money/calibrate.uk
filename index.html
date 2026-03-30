@@ -633,6 +633,88 @@ function buildWeeklyPlan(goal) {
   return plans[goal] || plans['healthy_balance'];
 }
 
+function calculateRecommendationBMI(heightCm, weightKg) {
+  var h = Number(heightCm) / 100;
+  var w = Number(weightKg);
+  if (!h || !w) return null;
+  return +(w / (h * h)).toFixed(1);
+}
+
+function getImpactLevel(bmi, age, activityLevel) {
+  var score = 0;
+  if (bmi >= 30) score += 2;
+  else if (bmi >= 25) score += 1;
+  if (age >= 50) score += 2;
+  else if (age >= 40) score += 1;
+  if (activityLevel === 'low') score += 1;
+  if (score >= 4) return 'high';
+  if (score >= 2) return 'medium';
+  return 'low';
+}
+
+function buildRecommendationReason(goalKey, level, activityLevel, impactLevel) {
+  var labels = {
+    aggressive_fat_loss: 'aggressive fat loss',
+    moderate_fat_loss: 'moderate fat loss',
+    lean_maintenance: 'lean maintenance',
+    healthy_balance: 'healthy balance',
+    lean_bulk: 'lean bulk',
+    mass_gain: 'muscle and mass gain',
+    performance: 'performance improvement'
+  };
+  var text = 'Your goal is ' + (labels[goalKey] || goalKey) + ', and your current training level is ' + level + '. ';
+  if (activityLevel === 'low') text += 'Because your daily activity level is low, the plan focuses on consistency and realistic progression. ';
+  if (impactLevel === 'high') text += 'Higher-impact options were reduced to lower joint stress and improve adherence. ';
+  if (goalKey === 'aggressive_fat_loss' || goalKey === 'moderate_fat_loss') text += 'The plan combines calorie-burning work with strength training to support body composition.';
+  else if (goalKey === 'lean_bulk' || goalKey === 'mass_gain') text += 'The plan prioritizes resistance training and limits unnecessary cardio volume.';
+  else if (goalKey === 'performance') text += 'The plan emphasizes strength, conditioning, and athletic development.';
+  else text += 'The plan emphasizes balanced movement, strength, and recovery.';
+  return text;
+}
+
+function mapFacilityType(place) {
+  var blob = (((place.types || []).join(' ')) + ' ' + (place.primaryType || '') + ' ' + (place.name || '')).toLowerCase();
+  if (blob.includes('gym') || blob.includes('fitness') || blob.includes('crossfit') || blob.includes('f45')) return 'gym';
+  if (blob.includes('pilates')) return 'pilates';
+  if (blob.includes('yoga')) return 'yoga';
+  if (blob.includes('swimming') || blob.includes('pool')) return 'swimming';
+  if (blob.includes('boxing') || blob.includes('mma') || blob.includes('martial')) return 'combat';
+  if (blob.includes('cycling') || blob.includes('spin')) return 'cycling';
+  return 'other';
+}
+
+function getFacilityMatchScore(workoutTypes, facilityType, goalKey) {
+  var score = 0;
+  var hasStrength = workoutTypes.some(function(x) { return ['Machine-based strength','Basic resistance training','Strength training','Hypertrophy training','Compound lifts','Upper/lower split'].indexOf(x) !== -1; });
+  var hasMobility = workoutTypes.some(function(x) { return ['Mobility work','Stretching'].indexOf(x) !== -1; });
+  var hasSwimming = workoutTypes.indexOf('Swimming') !== -1;
+  var hasCycling = workoutTypes.indexOf('Cycling') !== -1;
+  var hasIntervals = workoutTypes.some(function(x) { return ['Circuit training','Interval training','Light intervals'].indexOf(x) !== -1; });
+
+  if (hasStrength && facilityType === 'gym') score += 40;
+  if (hasMobility && facilityType === 'yoga') score += 20;
+  if (hasSwimming && facilityType === 'swimming') score += 30;
+  if (hasCycling && facilityType === 'cycling') score += 25;
+  if (hasIntervals && facilityType === 'gym') score += 20;
+  if ((goalKey === 'lean_bulk' || goalKey === 'mass_gain') && facilityType === 'gym') score += 20;
+  if (goalKey === 'performance' && (facilityType === 'gym' || facilityType === 'cycling' || facilityType === 'combat')) score += 15;
+  return score;
+}
+
+function getDistanceScore(distanceMiles) {
+  var d = Number(distanceMiles || 99);
+  if (d <= 0.5) return 25;
+  if (d <= 1) return 22;
+  if (d <= 2) return 18;
+  if (d <= 3) return 12;
+  return 0;
+}
+
+function getRatingScore(rating) {
+  if (!rating) return 0;
+  return Math.min(Math.round(Number(rating) * 3), 15);
+}
+
 function getRecommendation(nearbyPlaces) {
   var form = document.forms['bmrForm'];
   if (!form) return null;
@@ -645,15 +727,27 @@ function getRecommendation(nearbyPlaces) {
   var weekly   = mapTrainingDays(form.elements['trainingDays'].value);
   var activity = mapActivityLevel(form.elements['activity'].value);
   var level    = weekly <= 1 && activity === 'low' ? 'beginner' : weekly <= 3 ? 'intermediate' : 'advanced';
-
+  var bmi      = calculateRecommendationBMI(heightCm, weightKg);
+  var impactLevel = getImpactLevel(bmi, age, activity);
   var workoutTypes = getWorkoutProfile(goalKey, level);
   var weeklyPlan   = buildWeeklyPlan(goalKey);
+  var recommendedFacilities = (nearbyPlaces || []).map(function(place) {
+    var facilityType = mapFacilityType(place);
+    return Object.assign({}, place, {
+      facilityType: facilityType,
+      score: getFacilityMatchScore(workoutTypes, facilityType, goalKey) + getDistanceScore(place.dist) + getRatingScore(place.rating)
+    });
+  }).sort(function(a,b) { return b.score - a.score; }).slice(0, 5);
 
   return {
     goalKey      : goalKey,
     level        : level,
+    bmi          : bmi,
+    impactLevel  : impactLevel,
     workoutTypes : workoutTypes,
     weeklyPlan   : weeklyPlan,
+    reason       : buildRecommendationReason(goalKey, level, activity, impactLevel),
+    recommendedFacilities: recommendedFacilities
   };
 }
 
@@ -685,9 +779,12 @@ function renderWorkoutAdvice(nearbyPlaces) {
   target.innerHTML =
     '<div class="workout-advice-card">' +
       '<h3>How you should train</h3>' +
+      '<p>' + escapeHtml(rec.reason) + '</p>' +
       '<div class="workout-advice-grid">' +
         '<div class="workout-advice-stat"><span class="label">Goal</span><span class="value">' + escapeHtml(GOAL_LABELS[document.forms['bmrForm'].elements['goal'].value]||'') + '</span></div>' +
         '<div class="workout-advice-stat"><span class="label">Level</span><span class="value">' + escapeHtml(rec.level) + '</span></div>' +
+        '<div class="workout-advice-stat"><span class="label">BMI</span><span class="value">' + (rec.bmi === null ? 'N/A' : escapeHtml(String(rec.bmi))) + '</span></div>' +
+        '<div class="workout-advice-stat"><span class="label">Impact</span><span class="value">' + escapeHtml(rec.impactLevel) + '</span></div>' +
       '</div>' +
       '<div class="workout-advice-sections">' +
         '<div class="workout-plan-panel"><h4>🔥 Recommended workout types</h4><ul>' +
@@ -699,6 +796,16 @@ function renderWorkoutAdvice(nearbyPlaces) {
       '</div>' +
       '<p class="workout-advice-note">This is a general fitness recommendation, not medical advice. Consult a professional if you have any health concerns.</p>' +
     '</div>';
+}
+
+function getFacilityRecommendationRanks(nearbyPlaces) {
+  var rec = getRecommendation(nearbyPlaces);
+  if (!rec) return {};
+  var ranks = {};
+  rec.recommendedFacilities.forEach(function(place, index) {
+    if (place.id) ranks[place.id] = index + 1;
+  });
+  return ranks;
 }
 
 /* ════════════════════════════════════════════
@@ -1113,6 +1220,7 @@ function doSearchAt(lat, lng, label, isUserLocation) {
     renderWorkoutAdvice(sorted);
 
     /* Render venue cards */
+    var recommendationRanks = getFacilityRecommendationRanks(sorted);
     var now       = new Date();
     var jsDay     = now.getDay();
     var wdIdx     = jsDay === 0 ? 6 : jsDay - 1;
@@ -1121,6 +1229,7 @@ function doSearchAt(lat, lng, label, isUserLocation) {
       '<div class="gym-count-badge">' + sorted.length + ' venues found within ' + SEARCH_RADIUS_MILES + ' miles of ' + escapeHtml(label) + '</div>' +
       sorted.map(function(place) {
         var ft        = getFitnessType(place.name, place.types, place.primaryType);
+        var recommendationRank = recommendationRanks[place.id] || null;
         var hours     = place.currentOpeningHours || place.regularOpeningHours || null;
         var openNow   = hours && typeof hours.openNow === 'boolean' ? hours.openNow : null;
         var wdText    = hours && hours.weekdayDescriptions ? hours.weekdayDescriptions[wdIdx] : '';
@@ -1134,6 +1243,7 @@ function doSearchAt(lat, lng, label, isUserLocation) {
           '<div class="gym-item" data-place-id="' + escapeHtml(place.id||'') + '">' +
             '<div class="gym-icon-wrap">' + ft.emoji + '</div>' +
             '<div class="gym-item-body">' +
+              (recommendationRank ? '<div class="gym-recommend-badge">#' + recommendationRank + '</div>' : '') +
               '<div class="gym-name">' + escapeHtml(place.name) + '</div>' +
               '<div class="gym-meta">' +
                 '<span class="gym-type">' + escapeHtml(ft.label) + '</span>' +
