@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Posture Support Workouts For Women - Calibrate</title>
-  <meta name="description" content="Posture-supportive exercises for women who sit at a desk, including upper-back, glute, and core work." />
+  <title>Posture Support Workouts For Women Who Sit All Day - Calibrate</title>
+  <meta name="description" content="A complete guide to posture-supportive exercises for women who work at a desk. Covers upper back, core, hip, and mobility work with a sample weekly routine." />
   <meta name="google-adsense-account" content="ca-pub-9247222675222330" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9247222675222330" crossorigin="anonymous"></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZL0KT039TB"></script>
@@ -24,39 +24,195 @@
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; font-family: Inter, system-ui, sans-serif; background: #faf8f5; color: #2d2420; line-height: 1.8; }
-    .top { padding: 28px 18px 0; text-align: center; }
-    .top a { color: #9a7252; text-decoration: none; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; font-size: 12px; }
-    .wrap { max-width: 820px; margin: 0 auto; padding: 32px 18px 64px; }
-    .card { background: #fff; border: 1px solid #ecddd4; border-radius: 18px; box-shadow: 0 2px 24px rgba(184,144,106,0.08); padding: 28px; }
-    h1 { margin: 0 0 14px; font-size: 30px; line-height: 1.2; }
-    h2 { margin: 28px 0 10px; font-size: 19px; }
-    p, li { font-size: 15px; color: #6b5c54; }
-    ul { padding-left: 20px; }
-    .footer { margin-top: 24px; font-size: 12px; color: #9b8e87; }
+    nav.nav { background: #fff; border-bottom: 1px solid #ecddd4; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
+    .nav-brand { color: #9a7252; text-decoration: none; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; font-size: 13px; }
+    .nav-links { display: flex; gap: 22px; }
+    .nav-links a { color: #6b5c54; text-decoration: none; font-size: 13px; font-weight: 500; }
+    .nav-links a:hover { color: #9a7252; }
+    .wrap { max-width: 820px; margin: 0 auto; padding: 36px 18px 72px; }
+    .card { background: #fff; border: 1px solid #ecddd4; border-radius: 18px; box-shadow: 0 2px 24px rgba(184,144,106,0.08); padding: 36px 32px; }
+    h1 { margin: 0 0 16px; font-size: 32px; line-height: 1.2; }
+    h2 { margin: 32px 0 10px; font-size: 20px; color: #2d2420; border-bottom: 1px solid #f0e8e0; padding-bottom: 6px; }
+    h3 { margin: 20px 0 8px; font-size: 16px; color: #4a3728; }
+    p { font-size: 15px; color: #6b5c54; margin: 0 0 14px; }
+    ul, ol { padding-left: 22px; margin: 0 0 14px; }
+    li { font-size: 15px; color: #6b5c54; margin-bottom: 6px; }
+    .intro-note { background: #fdf5ed; border-left: 3px solid #b8906a; border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 18px 0; }
+    .intro-note p { margin: 0; font-size: 14px; color: #7a5c48; }
+    .exercise-block { background: #f9f4ef; border: 1px solid #ecddd4; border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
+    .exercise-block h3 { margin: 0 0 6px; font-size: 15px; color: #9a7252; }
+    .exercise-block p { margin: 0; font-size: 14px; }
+    .week-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+    .week-table th { background: #f5ede8; color: #4a3728; font-weight: 600; padding: 10px 12px; text-align: left; border: 1px solid #ecddd4; }
+    .week-table td { padding: 10px 12px; border: 1px solid #ecddd4; color: #6b5c54; vertical-align: top; }
+    .week-table tr:nth-child(even) td { background: #fdf9f7; }
+    .posture-pattern { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    @media (max-width: 600px) { .posture-pattern { grid-template-columns: 1fr; } }
+    .pattern-card { background: #f5ede8; border-radius: 12px; padding: 14px 16px; }
+    .pattern-card .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #9a7252; margin-bottom: 4px; }
+    .pattern-card p { font-size: 13px; color: #6b5c54; margin: 0; }
+    .faq-item { border-top: 1px solid #ecddd4; padding: 16px 0; }
+    .faq-item:last-child { border-bottom: 1px solid #ecddd4; }
+    .faq-q { font-size: 15px; font-weight: 600; color: #2d2420; margin: 0 0 6px; }
+    .faq-a { font-size: 14px; color: #6b5c54; margin: 0; }
+    .footer { margin-top: 32px; padding-top: 18px; border-top: 1px solid #ecddd4; font-size: 12px; color: #9b8e87; }
     .footer a { color: #9a7252; text-decoration: none; margin-right: 12px; }
   </style>
 </head>
 <body>
-  <div class="top"><a href="/">Calibrate</a></div>
+  <nav class="nav">
+    <a class="nav-brand" href="/">Calibrate</a>
+    <div class="nav-links">
+      <a href="/guides.html">Guides</a>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+    </div>
+  </nav>
   <div class="wrap">
     <div class="card">
-      <h1>Posture Support Workouts For Women</h1>
-<p>Long desk hours often leave people feeling tight through the chest, underactive through the glutes, and weak through the upper back. Exercise cannot create perfect posture all by itself, but it can improve strength and movement quality.</p>
-<h2>Helpful Exercise Categories</h2>
-<ul>
-  <li>Rows, face pulls, and rear-delt work for upper-back strength</li>
-  <li>Glute bridges, split squats, and hinges for lower-body support</li>
-  <li>Planks, carries, and anti-rotation core work for trunk stability</li>
-  <li>Mobility drills for the chest, thoracic spine, and hips</li>
-</ul>
-<h2>Simple Weekly Routine</h2>
-<p>Two short strength sessions and one mobility-focused session per week is often enough to feel meaningful improvement in how you stand, sit, and move.</p>
-<h2>Important Reminder</h2>
-<p>Persistent pain, numbness, or neurological symptoms should be assessed by a qualified clinician rather than self-managed through exercise articles alone.</p>
+      <h1>Posture Support Workouts For Women Who Sit All Day</h1>
+      <p>Long hours at a desk, screen time, and sedentary commuting all push the body toward a predictable set of postural patterns: head forward, shoulders rounded, chest tight, upper back weak, hip flexors shortened, and glutes underactive. Over time, these patterns affect how you move, how you feel, and sometimes how you look.</p>
+      <p>The good news is that targeted exercise can directly address each of these issues. You do not need to spend hours in the gym or follow an elaborate program. Two to three short, focused sessions per week addressing the right muscle groups can produce meaningful improvement in how you stand, sit, and move within a few months.</p>
+      <p>This guide explains what desk work does to the body, which exercises counteract those effects most effectively, and how to organize them into a simple weekly routine.</p>
+
+      <div class="intro-note">
+        <p><strong>Important:</strong> If you experience persistent pain, numbness, tingling, or neurological symptoms related to your posture or back, see a qualified clinician — such as a physiotherapist or sports medicine physician — before relying on a general exercise article. This guide is for general educational purposes only.</p>
+      </div>
+
+      <h2>What Sitting Does to the Body</h2>
+      <p>Extended sitting in a standard office position causes several predictable adaptations:</p>
+
+      <div class="posture-pattern">
+        <div class="pattern-card">
+          <div class="label">Upper Body</div>
+          <p>Forward head posture, rounded shoulders, tight chest (pectorals), weak upper and mid-back, shortened neck extensors</p>
+        </div>
+        <div class="pattern-card">
+          <div class="label">Lower Body</div>
+          <p>Tight hip flexors (especially psoas), anterior pelvic tilt, inhibited glutes, tight quadriceps, reduced hip extension range</p>
+        </div>
+        <div class="pattern-card">
+          <div class="label">Core</div>
+          <p>Reduced activation of deep stabilizers, overreliance on passive structures (ligaments, joints) rather than active muscle support</p>
+        </div>
+        <div class="pattern-card">
+          <div class="label">Overall Effect</div>
+          <p>Reduced movement quality, increased fatigue, potential for lower back discomfort, and changes to how you carry yourself at rest</p>
+        </div>
+      </div>
+
+      <p>The solution is not just to "sit up straight." Willpower-based posture changes rarely stick because the underlying muscle imbalances are not addressed. Exercise that strengthens weak areas and lengthens tight ones creates lasting change.</p>
+
+      <h2>Upper Back and Shoulder Exercises</h2>
+      <p>The upper back muscles — including the rhomboids, middle and lower trapezius, and rear deltoids — are chronically underused in desk workers. Strengthening them pulls the shoulders back and counteracts the forward rounding that accumulates during the day.</p>
+
+      <div class="exercise-block">
+        <h3>Seated or Bent-Over Rows</h3>
+        <p>Using a cable machine, resistance band, or dumbbells, row the weight toward your lower ribcage while squeezing your shoulder blades together. Think about driving your elbows back and slightly down rather than pulling with your arms. A 2-second hold at the point of maximum contraction increases the benefit. Rows are foundational for posture correction and should feature in every upper-back session.</p>
+      </div>
+
+      <div class="exercise-block">
+        <h3>Face Pulls</h3>
+        <p>Using a cable machine with a rope attachment set at head height, pull the rope toward your face while rotating your hands outward (external rotation). This targets the rear deltoids and rotator cuff — two areas that become weak and inhibited with prolonged desk work. Face pulls are often recommended by physiotherapists for shoulder health and posture correction.</p>
+      </div>
+
+      <div class="exercise-block">
+        <h3>Prone Y-T-W Raises</h3>
+        <p>Lie face down on the floor or a bench and raise your arms into Y, T, and W positions (thumbs up throughout). These movements directly target the lower and mid-trapezius with no equipment required. They are excellent warm-up movements before any upper-body session. Start without weight — the position alone is challenging enough for most beginners.</p>
+      </div>
+
+      <div class="exercise-block">
+        <h3>Band Pull-Aparts</h3>
+        <p>Hold a resistance band at chest height with both hands. Pull the band apart by extending both arms out to the sides, squeezing your shoulder blades together at the end of the movement. A simple exercise that can be done anywhere, and an effective warm-up for the upper back before any training session.</p>
+      </div>
+
+      <h2>Core and Lower Back Exercises</h2>
+      <p>A strong, well-functioning core reduces the load on passive spinal structures and helps maintain better position during long periods of sitting. The goal is not just to do more crunches — it is to build stability through anti-extension and anti-rotation patterns.</p>
+
+      <div class="exercise-block">
+        <h3>Dead Bugs</h3>
+        <p>Lying on your back, press your lower back firmly into the floor and extend one arm overhead while extending the opposite leg. Lower back contact must be maintained throughout. This exercise trains deep core stability without compressing the spine and is one of the most recommended exercises for people with desk-related lower back issues.</p>
+      </div>
+
+      <div class="exercise-block">
+        <h3>McGill Side Plank</h3>
+        <p>Lie on your side with your elbow below your shoulder and knees slightly bent (regression) or legs straight (full version). Lift your hips to create a straight line from head to feet and hold. This specifically targets the quadratus lumborum — a deep lower back muscle that is often weak in those with chronic low back discomfort from sitting. Hold for 10–20 seconds, rest, and repeat.</p>
+      </div>
+
+      <h2>Hip and Glute Exercises</h2>
+      <p>Hip flexor tightness and glute inhibition (often called "gluteal amnesia") are almost universal in desk workers. The glutes play a central role in stabilizing the pelvis, supporting the lower back, and generating power in everyday movement. When they are underactive, other structures compensate — often leading to back and knee discomfort.</p>
+
+      <div class="exercise-block">
+        <h3>Glute Bridges</h3>
+        <p>Lie on your back, feet flat on the floor about hip-width apart. Squeeze your glutes and bridge your hips upward until your body forms a straight line from knees to shoulders. Pause at the top for 2–3 seconds before lowering. Adding a resistance band above the knees increases glute medius activation. This is one of the first exercises to teach the glutes to fire in people who have been sitting for extended periods.</p>
+      </div>
+
+      <div class="exercise-block">
+        <h3>Hip Flexor Stretch (Kneeling Lunge)</h3>
+        <p>Kneel with one knee on the floor, the other foot forward. Shift your weight forward gently until you feel a stretch through the front of the rear hip. Actively squeeze the rear glute as you stretch to increase the hip flexor release. Hold for 30–45 seconds per side. This should be done daily if you sit for more than six hours.</p>
+      </div>
+
+      <div class="exercise-block">
+        <h3>Step-Ups</h3>
+        <p>Step one foot onto a box or step, drive through that heel to lift your body up, and bring the other foot to meet it before stepping back down. Step-ups train single-leg glute and quad strength in a movement pattern that directly applies to walking and stair climbing. They are low-impact and easy to program for any fitness level.</p>
+      </div>
+
+      <h2>Mobility Work for Desk Workers</h2>
+      <p>Strength training addresses weakness; mobility work addresses restriction. Both are necessary for posture improvement.</p>
+      <ul>
+        <li><strong>Thoracic spine rotation:</strong> Sit or lie on your side and rotate the upper back. This restores mobility in the area most restricted by desk work and reduces the load on the neck and lower back.</li>
+        <li><strong>Chest stretch (doorway stretch):</strong> Place both forearms on a door frame and gently lean forward. Hold 30–45 seconds. Counteracts chronic pectoral shortening from rounded shoulders.</li>
+        <li><strong>Neck stretches:</strong> Gentle side-tilt and rotation of the neck through its natural range. Avoid forceful or extreme positions. The goal is ease of movement, not increased range.</li>
+        <li><strong>Hip 90/90 stretch:</strong> Sit on the floor in a 90/90 hip position (front leg in external rotation, rear leg in internal rotation). This targets both hip external rotators and the hip flexors simultaneously and is particularly useful for those with hip tightness from prolonged sitting.</li>
+      </ul>
+
+      <h2>Sample Weekly Routine</h2>
+
+      <table class="week-table">
+        <thead>
+          <tr><th>Day</th><th>Session</th><th>Time</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Monday</td><td>Upper back strength + core (rows 3×12, face pulls 3×15, dead bugs 3×10, side plank 3×20s)</td><td>30–35 min</td></tr>
+          <tr><td>Wednesday</td><td>Lower body + hip mobility (glute bridges 3×15, step-ups 3×10 each, hip flexor stretch, 90/90 mobility)</td><td>30–35 min</td></tr>
+          <tr><td>Friday</td><td>Full body + mobility (band pull-aparts, prone Y-T-W, glute bridges, thoracic rotation, chest stretch)</td><td>25–30 min</td></tr>
+        </tbody>
+      </table>
+
+      <p>This routine requires minimal equipment and can be done at home or a gym. On off days, a 15–20 minute walk and one round of the hip flexor and thoracic mobility work is beneficial and takes very little time.</p>
+
+      <h2>Daily Habits That Support Good Posture</h2>
+      <p>Exercise alone cannot fix posture if you are sitting in the same position for eight to ten hours a day. Small habit changes during the workday matter:</p>
+      <ul>
+        <li>Stand up and move for at least 2 minutes every 45–60 minutes</li>
+        <li>Set up your workspace so the top of your screen is at or slightly below eye level</li>
+        <li>If using a laptop, consider a separate keyboard so you can raise the screen to a better height</li>
+        <li>Check in occasionally with your shoulder position — consciously drawing them back and down can interrupt patterns that build through the day</li>
+        <li>Walking after meals is a simple way to add movement volume without structured exercise time</li>
+      </ul>
+
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item">
+        <p class="faq-q">How long until I notice improvement in my posture?</p>
+        <p class="faq-a">Most people notice improved muscle awareness and reduced tension within two to four weeks of consistent training. Visible changes in how they stand and carry themselves typically appear within six to twelve weeks. Sustained improvement beyond that requires continued training — posture does not correct and stay corrected without ongoing maintenance.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">Can I fix forward head posture with exercise alone?</p>
+        <p class="faq-a">Mild to moderate forward head posture can respond well to upper back strengthening, neck stretching, and changes to workstation ergonomics. Severe or long-standing cases may benefit from physiotherapy assessment and specific targeted treatment. Persistent headaches, neck pain, or arm symptoms associated with forward head posture should be assessed clinically.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">Is yoga a good option for posture improvement?</p>
+        <p class="faq-a">Yoga can improve flexibility, body awareness, and some aspects of strength. However, it is generally more effective for posture when combined with dedicated resistance training for the upper back and glutes, rather than as a standalone approach. The strength component is difficult to develop through yoga alone for many people.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">My lower back hurts after sitting. What should I do first?</p>
+        <p class="faq-a">If lower back pain is affecting your daily life or has lasted longer than a few weeks, a physiotherapy assessment is the most useful first step. In the meantime, gentle movement (short walks, light mobility work) tends to be more helpful than complete rest. Avoid prolonged static postures in one position and get up frequently.</p>
+      </div>
+
       <div class="footer">
         <a href="/">Home</a>
-        <a href="/about.html">About</a>
         <a href="/guides.html">Guides</a>
+        <a href="/about.html">About</a>
         <a href="/privacy.html">Privacy</a>
         <a href="/terms.html">Terms</a>
         <a href="/contact.html">Contact</a>
